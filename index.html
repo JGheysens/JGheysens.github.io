@@ -40,10 +40,7 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-			/* const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-			const cube = new THREE.Mesh( geometry, material );
-			scene.add( cube ); */
+			z
 
 			const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
 
@@ -67,14 +64,6 @@
     scene.add( mesh );
 
 			camera.position.z = 5;
-			function animate() {
-			requestAnimationFrame( animate );
-
-			/* cube.rotation.x += 0.01;
-			cube.rotation.y += 0.01; */
-
-			renderer.render( scene, camera );
-			}
 			
 			function playAudio() {
             const listener = new THREE.AudioListener();
@@ -93,6 +82,14 @@
             }
             analyser = new THREE.AudioAnalyser(audio, fftSize);
         }
+        function animate() {
+			requestAnimationFrame( animate );
+
+			cube.rotation.x += 0.01;
+			cube.rotation.y += 0.01;
+
+			renderer.render( scene, camera );
+			}
 			animate();
 		}
 		
