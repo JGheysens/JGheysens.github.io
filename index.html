@@ -62,32 +62,61 @@
 
     //
 
-            const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
+    const format = (renderer.capabilities.isWebGL2) ? THREE.RedFormat : THREE.LuminanceFormat;
 
-            uniforms = {
+uniforms = {
+    tAudioData: { value: new THREE.DataTexture(analyser.data, analyser.data.length, 1, format) }
+};
 
-                tAudioData: { value: new THREE.DataTexture( analyser.data, fftSize / 2, 1, format ) }
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-            };
-            
-			const scene = new THREE.Scene();
-			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-			const renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
+const vertexShaderCode = `
+    varying vec2 vUv;
 
-			const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-			const cube = new THREE.Mesh( geometry, material );
-			scene.add( cube );
+    void main() {
+        vUv = uv;
+        vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * modelViewPosition;
+    }
+`;
+
+const fragmentShaderCode = `
+    uniform sampler2D tAudioData;
+    varying vec2 vUv;
+
+    void main() {
+        vec3 color = texture2D(tAudioData, vec2(vUv.x, 0.5)).rgb;
+        gl_FragColor = vec4(color, 1.0);
+    }
+`;
+
+const material = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: vertexShaderCode,
+    fragmentShader: fragmentShaderCode
+});
+
+const geometry = new THREE.PlaneGeometry(5, 1, analyser.data.length - 1, 1);
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
 
 			camera.position.z = 5;
 			function animate() {
 			    requestAnimationFrame( animate );
 
-			    cube.rotation.x += 0.01;
-			    cube.rotation.y += 0.01;
+			    analyser.getFrequencyData();
+
+                    // Update the y-position of the vertices based on the audio data
+                    for (let i = 0; i < analyser.data.length; i++) {
+                        mesh.geometry.vertices[i].y = analyser.data[i] / 100; // Adjust the scale as needed
+                    }
+
+                    mesh.geometry.verticesNeedUpdate = true;
 
 			    renderer.render( scene, camera );
 		    }
