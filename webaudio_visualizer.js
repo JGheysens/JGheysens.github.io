@@ -1,33 +1,5 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
-
-// Shader code as strings
-const vertexShaderCode = `
-    varying vec2 vUv;
-
-    void main() {
-        vUv = uv;
-        gl_Position = vec4(position, 1.0);
-    }
-`;
-
-const fragmentShaderCode = `
-    uniform sampler2D tAudioData;
-    varying vec2 vUv;
-
-    void main() {
-        vec3 backgroundColor = vec3(0.125, 0.125, 0.125);
-        vec3 color = vec3(1.0, 1.0, 0.0);
-
-        float f = texture2D(tAudioData, vec2(vUv.x, 0.0)).r;
-
-        float i = step(vUv.y, f) * step(f - 0.0125, vUv.y);
-
-        gl_FragColor = vec4(mix(backgroundColor, color, i), 1.0);
-    }
-`;
-
 const fftSize = 128;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -36,12 +8,6 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Assuming you have an HTML element with id 'overlay'
-const overlay = document.getElementById('overlay');
-overlay.remove();
-
-// Assuming you have an HTML element with id 'container'
-const container = document.getElementById('container');
 
 const listener = new THREE.AudioListener();
 const audio = new THREE.Audio(listener);
