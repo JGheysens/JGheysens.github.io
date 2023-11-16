@@ -7,22 +7,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
-const playButton = document.createElement('button');
-playButton.textContent = 'Play Audio';
-document.body.appendChild(playButton);
 
-playButton.addEventListener('click', () => {
-    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-        const loader = new THREE.AudioLoader();
-        loader.load(file, function (buffer) {
-            audio.setBuffer(buffer);
-            audio.play();
-        });
-    } else {
-        mediaElement.play();
-        audio.setMediaElementSource(mediaElement);
-    }
-});
 
 const listener = new THREE.AudioListener();
 const audio = new THREE.Audio(listener);
@@ -65,5 +50,21 @@ function animate() {
 
 	renderer.render( scene, camera );
 }
+const playButton = document.createElement('button');
+playButton.textContent = 'Play Audio';
+document.body.appendChild(playButton);
+
+playButton.addEventListener('click', () => {
+    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
+        const loader = new THREE.AudioLoader();
+        loader.load(file, function (buffer) {
+            audio.setBuffer(buffer);
+            audio.play();
+        });
+    } else {
+        mediaElement.play();
+        audio.setMediaElementSource(mediaElement);
+    }
+});
 
 animate();
