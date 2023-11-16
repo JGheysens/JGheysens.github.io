@@ -39,7 +39,7 @@
 			const renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
-
+			const fftSize = 128;
 			/* const geometry = new THREE.BoxGeometry( 1, 1, 1 );
 			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 			const cube = new THREE.Mesh( geometry, material );
@@ -66,44 +66,40 @@
     const mesh = new THREE.Mesh( geometry, material );
     scene.add( mesh );
 
-			camera.position.z = 5;
-			
-			function animate() {
+	camera.position.z = 5;
+	
+	function animate() {
 
-requestAnimationFrame( animate );
+		requestAnimationFrame( animate );
 
-render();
+		analyser.getFrequencyData();
 
+		uniforms.tAudioData.value.needsUpdate = true;
+
+		renderer.render( scene, camera );
+
+	}
+
+
+	function playAudio() {
+	const listener = new THREE.AudioListener();
+	const audio = new THREE.Audio(listener);
+	const file = './sounds/drums.mp3';
+	if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
+		const loader = new THREE.AudioLoader();
+		loader.load(file, function (buffer) {
+			audio.setBuffer(buffer);
+			audio.play();
+		});
+	} else {
+		const mediaElement = new Audio(file);
+		mediaElement.play();
+		audio.setMediaElementSource(mediaElement);
+	}
+	analyser = new THREE.AudioAnalyser(audio, fftSize);
+	}
+	animate();
 }
-
-function render() {
-
-analyser.getFrequencyData();
-
-uniforms.tAudioData.value.needsUpdate = true;
-
-renderer.render( scene, camera );
-
-}
-			function playAudio() {
-            const listener = new THREE.AudioListener();
-            const audio = new THREE.Audio(listener);
-            const file = './sounds/drums.mp3';
-            if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-                const loader = new THREE.AudioLoader();
-                loader.load(file, function (buffer) {
-                    audio.setBuffer(buffer);
-                    audio.play();
-                });
-            } else {
-                const mediaElement = new Audio(file);
-                mediaElement.play();
-                audio.setMediaElementSource(mediaElement);
-            }
-            analyser = new THREE.AudioAnalyser(audio, fftSize);
-        }
-			animate();
-		}
 		
 		
 
