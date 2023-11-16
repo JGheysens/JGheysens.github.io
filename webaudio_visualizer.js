@@ -1,107 +1,85 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-let scene, camera, renderer, analyser, uniforms;
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-const startButton = document.getElementById( 'startButton' );
-startButton.addEventListener( 'click', init );
+// Shader code as strings
+const vertexShaderCode = `
+    varying vec2 vUv;
 
-function init() {
-
-    const fftSize = 128;
-
-    //
-
-
-
-
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    container.appendChild( renderer.domElement );
-
-    scene = new THREE.Scene();
-
-    camera = new THREE.Camera();
-
-    //
-
-    const listener = new THREE.AudioListener();
-
-    const audio = new THREE.Audio( listener );
-    const file = './sounds/drums.mp3';
-
-    if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
-
-        const loader = new THREE.AudioLoader();
-        loader.load( file, function ( buffer ) {
-
-            audio.setBuffer( buffer );
-            audio.play();
-
-        } );
-
-    } else {
-
-        const mediaElement = new Audio( file );
-        mediaElement.play();
-
-        audio.setMediaElementSource( mediaElement );
-
+    void main() {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
     }
+`;
 
-    analyser = new THREE.AudioAnalyser( audio, fftSize );
+const fragmentShaderCode = `
+    uniform sampler2D tAudioData;
+    varying vec2 vUv;
 
-    //
+    void main() {
+        vec3 backgroundColor = vec3(0.125, 0.125, 0.125);
+        vec3 color = vec3(1.0, 1.0, 0.0);
 
-    const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
+        float f = texture2D(tAudioData, vec2(vUv.x, 0.0)).r;
 
-    uniforms = {
+        float i = step(vUv.y, f) * step(f - 0.0125, vUv.y);
 
-        tAudioData: { value: new THREE.DataTexture( analyser.data, fftSize / 2, 1, format ) }
+        gl_FragColor = vec4(mix(backgroundColor, color, i), 1.0);
+    }
+`;
 
-    };
+const fftSize = 128;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    const material = new THREE.ShaderMaterial( {
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-        uniforms: uniforms,
-        vertexShader: document.getElementById( 'vertexShader' ).textContent,
-        fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+// Assuming you have an HTML element with id 'overlay'
+const overlay = document.getElementById('overlay');
+overlay.remove();
 
-    } );
+// Assuming you have an HTML element with id 'container'
+const container = document.getElementById('container');
 
-    const geometry = new THREE.PlaneGeometry( 1, 1 );
+const listener = new THREE.AudioListener();
+const audio = new THREE.Audio(listener);
+const file = './sounds/drums.mp3';
+const mediaElement = new Audio(file);
+mediaElement.play();
+audio.setMediaElementSource(mediaElement);
 
-    const mesh = new THREE.Mesh( geometry, material );
-    scene.add( mesh );
+const analyser = new THREE.AudioAnalyser(audio, fftSize);
 
-    //
+// Use 'let' to declare variables
+let uniforms = {
+    tAudioData: { value: new THREE.DataTexture(analyser.data, fftSize / 2, 1, THREE.RedFormat) }
+};
 
-    window.addEventListener( 'resize', onWindowResize );
+// Shader material with inline shader code
+const material = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: vertexShaderCode,
+    fragmentShader: fragmentShaderCode
+});
 
-    animate();
+const geometry = new THREE.PlaneGeometry(2, 2); // Increase the size of the plane
 
-}
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
 
-function onWindowResize() {
+camera.position.z = 5;
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
+function render() {
+    analyser.getFrequencyData();
+    uniforms.tAudioData.value.needsUpdate = true;
+    renderer.render(scene, camera);
 }
 
 function animate() {
-
-    requestAnimationFrame( animate );
-
+    requestAnimationFrame(animate);
     render();
-
 }
 
-function render() {
-
-    analyser.getFrequencyData();
-
-    uniforms.tAudioData.value.needsUpdate = true;
-
-    renderer.render( scene, camera );
-
-}
+animate();
