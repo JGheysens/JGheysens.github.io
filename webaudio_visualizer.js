@@ -36,15 +36,6 @@ function init() {
 
     const fftSize = 128;
 
-    //
-
-    const overlay = document.getElementById( 'overlay' );
-    overlay.remove();
-
-    //
-
-    const container = document.getElementById( 'container' );
-
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -54,12 +45,11 @@ function init() {
 
     camera = new THREE.Camera();
 
-    //
 
     const listener = new THREE.AudioListener();
 
     const audio = new THREE.Audio( listener );
-    const file = './sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3';
+    const file = './sounds/drums.mp3';
 
     if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 
@@ -95,8 +85,8 @@ function init() {
     const material = new THREE.ShaderMaterial( {
 
         uniforms: uniforms,
-        vertexShader: document.getElementById( 'vertexShader' ).textContent,
-        fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+        vertexShader: vertexShaderCode,
+        fragmentShader: fragmentShaderCode
 
     } );
 
