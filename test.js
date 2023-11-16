@@ -32,7 +32,7 @@ if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 }
 analyser = new THREE.AudioAnalyser( audio, fftSize );
 
-const geometry = new THREE.PlaneGeometry( 1, 1 );
+const geometry = new THREE.PlaneGeometry( 10, 10 );
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh );
