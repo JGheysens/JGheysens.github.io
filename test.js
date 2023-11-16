@@ -29,10 +29,13 @@ if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 	audio.setMediaElementSource( mediaElement );
 
 }
-
-
+if (audio.isPlaying() || mediaElement.isPlaying()) {
+	color=0xff0000;
+} else {
+	color=0x00ff00;
+}
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const material = new THREE.MeshBasicMaterial( { color: color } );
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 
