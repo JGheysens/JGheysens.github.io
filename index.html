@@ -22,6 +22,8 @@
     <script type="module">
 		import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
+		import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+
 		const startButton = document.getElementById('startButton');
         startButton.addEventListener('click', init);
 		function init() {
@@ -31,8 +33,6 @@
             //
 
             const container = document.getElementById('container');
-			const playAudioButton = document.getElementById('playAudioButton');
-        	playAudioButton.addEventListener('click', playAudio);
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -40,59 +40,22 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-			z
-
-			const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
-
-    uniforms = {
-
-        tAudioData: { value: new THREE.DataTexture( analyser.data, fftSize / 2, 1, format ) }
-
-    };
-
-    const material = new THREE.ShaderMaterial( {
-
-        uniforms: uniforms,
-        vertexShader: vertexShaderCode,
-        fragmentShader: fragmentShaderCode
-
-    } );
-
-    const geometry = new THREE.PlaneGeometry( 1, 1 );
-
-    const mesh = new THREE.Mesh( geometry, material );
-    scene.add( mesh );
+			const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
 
 			camera.position.z = 5;
-			
-			function playAudio() {
-            const listener = new THREE.AudioListener();
-            const audio = new THREE.Audio(listener);
-            const file = './sounds/drums.mp3';
-            if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-                const loader = new THREE.AudioLoader();
-                loader.load(file, function (buffer) {
-                    audio.setBuffer(buffer);
-                    audio.play();
-                });
-            } else {
-                const mediaElement = new Audio(file);
-                mediaElement.play();
-                audio.setMediaElementSource(mediaElement);
-            }
-            analyser = new THREE.AudioAnalyser(audio, fftSize);
-        }
-        function animate() {
-			requestAnimationFrame( animate );
+			function animate() {
+			    requestAnimationFrame( animate );
 
-			cube.rotation.x += 0.01;
-			cube.rotation.y += 0.01;
+			    cube.rotation.x += 0.01;
+			    cube.rotation.y += 0.01;
 
-			renderer.render( scene, camera );
-			}
+			    renderer.render( scene, camera );
+		    }
 			animate();
 		}
-		
 		
 
 		
