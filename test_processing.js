@@ -1,7 +1,7 @@
 // import * as THREE from 'three';
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-fftSize=128;#bands
+fftSize=128;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -12,7 +12,7 @@ document.body.appendChild( renderer.domElement );
 const listener = new THREE.AudioListener();
 
 const audio = new THREE.Audio( listener );
-const file = './sounds/drums.wav';
+const file = './sounds/drums.mp3';
 const mediaElement = new Audio( file );
 mediaElement.play();
 audio.setMediaElementSource( mediaElement );
