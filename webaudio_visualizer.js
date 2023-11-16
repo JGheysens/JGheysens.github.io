@@ -58,13 +58,13 @@ let uniforms = {
 };
 
 // Shader material with inline shader code
-const material = new THREE.ShaderMaterial({
+/* const material = new THREE.ShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertexShaderCode,
     fragmentShader: fragmentShaderCode
-});
-
-const geometry = new THREE.PlaneGeometry(2, 2); // Increase the size of the plane
+}); */
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const geometry = new THREE.PlaneGeometry(5, 5); // Increase the size of the plane
 
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
