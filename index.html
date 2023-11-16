@@ -60,6 +60,23 @@ function init(){
 
 	camera.position.z = 5;
 
+	const playButton = document.createElement('button');
+	playButton.textContent = 'Play Audio';
+	document.body.appendChild(playButton);
+
+	playButton.addEventListener('click', () => {
+    	if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
+        	const loader = new THREE.AudioLoader();
+        	loader.load(file, function (buffer) {
+            	audio.setBuffer(buffer);
+            	audio.play();
+        	});
+    	} else {
+        	mediaElement.play();
+        	audio.setMediaElementSource(mediaElement);
+    }
+}); 
+
 	window.addEventListener( 'resize', onWindowResize );
 
     animate();
@@ -80,22 +97,7 @@ function animate() {
 
 	renderer.render( scene, camera );
 }
-const playButton = document.createElement('button');
-playButton.textContent = 'Play Audio';
-document.body.appendChild(playButton);
 
-playButton.addEventListener('click', () => {
-    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-        const loader = new THREE.AudioLoader();
-        loader.load(file, function (buffer) {
-            audio.setBuffer(buffer);
-            audio.play();
-        });
-    } else {
-        mediaElement.play();
-        audio.setMediaElementSource(mediaElement);
-    }
-}); 
 
 		</script>
 	</body>
