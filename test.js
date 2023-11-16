@@ -66,7 +66,7 @@ function animate() {
 
 	renderer.render( scene, camera );
 }
-/* const playButton = document.createElement('button');
+const playButton = document.createElement('button');
 playButton.textContent = 'Play Audio';
 document.body.appendChild(playButton);
 
@@ -81,4 +81,4 @@ playButton.addEventListener('click', () => {
         mediaElement.play();
         audio.setMediaElementSource(mediaElement);
     }
-}); */
+});
