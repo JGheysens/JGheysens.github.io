@@ -15,7 +15,9 @@
     <div id="overlay">
         <button id="startButton">Play</button>
     </div>
-    <div id="container"></div>
+    <div id="container">
+		<button id="playAudioButton">Play Audio</button>
+	</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module">
 		import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
@@ -29,6 +31,8 @@
             //
 
             const container = document.getElementById('container');
+			const playAudioButton = document.getElementById('playAudioButton');
+        	playAudioButton.addEventListener('click', playAudio);
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -42,17 +46,34 @@
 			scene.add( cube );
 
 			camera.position.z = 5;
-			
-			animate();
-		}
-		function animate() {
+			function animate() {
 			requestAnimationFrame( animate );
 
 			cube.rotation.x += 0.01;
 			cube.rotation.y += 0.01;
 
 			renderer.render( scene, camera );
+			}
+			function playAudio() {
+            const listener = new THREE.AudioListener();
+            const audio = new THREE.Audio(listener);
+            const file = './sounds/drums.mp3';
+            if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
+                const loader = new THREE.AudioLoader();
+                loader.load(file, function (buffer) {
+                    audio.setBuffer(buffer);
+                    audio.play();
+                });
+            } else {
+                const mediaElement = new Audio(file);
+                mediaElement.play();
+                audio.setMediaElementSource(mediaElement);
+            }
+            analyser = new THREE.AudioAnalyser(audio, fftSize);
+        }
+			animate();
 		}
+		
 		
 
 		
