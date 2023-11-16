@@ -18,29 +18,20 @@
     <div id="container"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module">
-        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
-        let scene, camera, renderer, analyser, cube;
+		import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+        const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-        const startButton = document.getElementById('startButton');
-        startButton.addEventListener('click', init);
+		const renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
 
-        function playAudio() {
-            const listener = new THREE.AudioListener();
-            const audio = new THREE.Audio(listener);
-            const file = './sounds/drums.mp3';
-            if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-                const loader = new THREE.AudioLoader();
-                loader.load(file, function (buffer) {
-                    audio.setBuffer(buffer);
-                    audio.play();
-                });
-            } else {
-                const mediaElement = new Audio(file);
-                mediaElement.play();
-                audio.setMediaElementSource(mediaElement);
-            }
-            analyser = new THREE.AudioAnalyser(audio, fftSize);
-        }
+		const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+		const cube = new THREE.Mesh( geometry, material );
+		scene.add( cube );
+
+		camera.position.z = 5;
 
 		function animate() {
 			requestAnimationFrame( animate );
@@ -49,52 +40,9 @@
 			cube.rotation.y += 0.01;
 
 			renderer.render( scene, camera );
-		
 		}
 
-        
-
-        function init() {
-            const overlay = document.getElementById('overlay');
-            overlay.remove();
-
-            //
-
-            const container = document.getElementById('container');
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const listener = new THREE.AudioListener();
-            const audio = new THREE.Audio(listener);
-            const file = './sounds/drums.mp3';
-            if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-                const loader = new THREE.AudioLoader();
-                loader.load(file, function (buffer) {
-                    audio.setBuffer(buffer);
-                    audio.play();
-                });
-            } else {
-                const mediaElement = new Audio(file);
-                mediaElement.play();
-                audio.setMediaElementSource(mediaElement);
-            }
-            analyser = new THREE.AudioAnalyser(audio, fftSize);
-
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshBasicMaterial({
-                color: 0x00ff00
-            });
-            cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
-
-            
-
-            animate();
-
-        }
+		animate();
     </script>
 </body>
 
