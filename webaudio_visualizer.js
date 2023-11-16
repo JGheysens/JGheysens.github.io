@@ -35,12 +35,6 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Assuming you have an HTML element with id 'overlay'
-const overlay = document.getElementById('overlay');
-overlay.remove();
-
-// Assuming you have an HTML element with id 'container'
-const container = document.getElementById('container');
 
 const listener = new THREE.AudioListener();
 const audio = new THREE.Audio(listener);
