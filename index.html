@@ -16,7 +16,7 @@
         <button id="startButton">Play</button>
     </div>
     <div id="container">
-		<!-- <button id="playAudioButton">Play Audio</button> -->
+		<button id="playAudioButton">Play Audio</button>
 	</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module">
@@ -31,6 +31,33 @@
 
             //
             const container = document.getElementById('container');
+            const playAudioButton = document.getElementById('playAudioButton');
+            playAudioButton.addEventListener('click', playAudio);
+            function playAudio() {
+                const listener = new THREE.AudioListener();
+
+            const audio = new THREE.Audio( listener );
+            const file = './sounds/drums.mp3';
+
+            if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+
+                const loader = new THREE.AudioLoader();
+                loader.load( file, function ( buffer ) {
+
+                    audio.setBuffer( buffer );
+                    audio.play();
+
+                } );
+
+            } else {
+
+                const mediaElement = new Audio( file );
+                mediaElement.play();
+
+                audio.setMediaElementSource( mediaElement );
+
+            };
+            }
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
