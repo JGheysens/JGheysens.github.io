@@ -11,12 +11,8 @@ function init() {
 
     //
 
-    const overlay = document.getElementById( 'overlay' );
-    overlay.remove();
 
-    //
 
-    const container = document.getElementById( 'container' );
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -32,7 +28,7 @@ function init() {
     const listener = new THREE.AudioListener();
 
     const audio = new THREE.Audio( listener );
-    const file = './sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3';
+    const file = './sounds/drums.mp3';
 
     if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 
