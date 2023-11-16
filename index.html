@@ -22,19 +22,32 @@ const playButton = document.createElement('button');
 playButton.textContent = 'Play Audio';
 document.body.appendChild(playButton);
 
-playButton.addEventListener('click', () => {
-    	if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-        	const loader = new THREE.AudioLoader();
-        	loader.load(file, function (buffer) {
-            	audio.setBuffer(buffer);
-            	audio.play();
-        	});
-    	} else {
-        	mediaElement.play();
-        	audio.setMediaElementSource(mediaElement);
-    }
-});
+playButton.addEventListener('click', playAudio ); 
 
+function playAudio(){
+	const listener = new THREE.AudioListener();
+	const audio = new THREE.Audio(listener);
+	const file = './sounds/drums.mp3';
+	if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+
+		const loader = new THREE.AudioLoader();
+		loader.load( file, function ( buffer ) {
+
+			audio.setBuffer( buffer );
+			audio.play();
+
+		} );
+
+	} else {
+
+		const mediaElement = new Audio( file );
+		mediaElement.play();
+
+		audio.setMediaElementSource( mediaElement );
+
+	}
+	analyser = new THREE.AudioAnalyser( audio, fftSize );
+}
 function init(){
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
