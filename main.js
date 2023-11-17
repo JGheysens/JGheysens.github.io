@@ -232,11 +232,11 @@ function init() {
 
     document.body.appendChild(ARButton.createButton(renderer));
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    /* const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
-
+ */
     
 
     controller = renderer.xr.getController(0);
@@ -244,6 +244,31 @@ function init() {
     scene.add(controller);
 
     window.addEventListener('resize', onWindowResize);
+	function playAudio() {
+		const listener = new THREE.AudioListener();
+
+	const audio = new THREE.Audio( listener );
+	const file = './sounds/drums.mp3';
+
+	if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+
+		const loader = new THREE.AudioLoader();
+		loader.load( file, function ( buffer ) {
+
+			audio.setBuffer( buffer );
+			audio.play();
+
+		} );
+
+	} else {
+
+		const mediaElement = new Audio( file );
+		mediaElement.play();
+
+		audio.setMediaElementSource( mediaElement );
+
+	};
+	}
 
     /* dolly = new THREE.Object3D();
     dolly.position.set(0, 0, 5);
@@ -255,6 +280,12 @@ function init() {
 
     function onSelect(){
         cube.material.color.set( Math.random() * 0xffffff );
+		const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+        const mesh = new THREE.Mesh( geometry, material );
+        mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
+        mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+        scene.add( mesh );
+		playAudio();
         /* const dt =clock.getDelta();
         quaternion=dolly.quaternion.clone();
         dolly.quaternion.copy(dummyCam.getWorldQuaternion());
