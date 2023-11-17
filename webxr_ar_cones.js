@@ -209,80 +209,62 @@ class ARButton {
 }
 
 let camera, scene, renderer;
-			let controller;
+let controller;
+let plane, planeMaterial; // New variables for the plane and material
 
-			init();
-			animate();
+init();
+animate();
 
-			function init() {
+function init() {
+  const container = document.createElement('div');
+  document.body.appendChild(container);
 
-				const container = document.createElement( 'div' );
-				document.body.appendChild( container );
+  scene = new THREE.Scene();
 
-				scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
+  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
+  light.position.set(0.5, 1, 0.25);
+  scene.add(light);
 
-				const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
-				light.position.set( 0.5, 1, 0.25 );
-				scene.add( light );
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.xr.enabled = true;
+  container.appendChild(renderer.domElement);
 
-				//
+  document.body.appendChild(ARButton.createButton(renderer));
 
-				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.xr.enabled = true;
-				container.appendChild( renderer.domElement );
+  // Create a plane geometry and material
+  const geometry = new THREE.PlaneGeometry(1, 1);
+  planeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 
-				//
+  // Create the plane mesh
+  plane = new THREE.Mesh(geometry, planeMaterial);
+  scene.add(plane);
 
-				document.body.appendChild( ARButton.createButton( renderer ) );
+  controller = renderer.xr.getController(0);
+  controller.addEventListener('select', onSelect);
+  scene.add(controller);
 
-				//
+  window.addEventListener('resize', onWindowResize);
+}
 
-				const geometry = new THREE.PlaneGeometry( 0.5,0.5);
-				const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+function onSelect() {
+  // Change the color of the plane's material when selected
+  planeMaterial.color.setRGB(Math.random(), Math.random(), Math.random());
+}
 
-				const mesh = new THREE.Mesh( geometry, material );
-				mesh.position.set( 0, 0, 5)
-				mesh.quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), Math.PI / 2 );
-				scene.add( mesh );
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
-				function onSelect() {
-					mesh.material.color.setHex( 0xffffff * Math.random() );
+function animate() {
+  renderer.setAnimationLoop(render);
+}
 
-				}
-
-				controller = renderer.xr.getController( 0 );
-				controller.addEventListener( 'select', onSelect );
-				scene.add( controller );
-
-				//
-
-				window.addEventListener( 'resize', onWindowResize );
-
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			//
-
-			function animate() {
-
-				renderer.setAnimationLoop( render );
-
-			}
-
-			function render() {
-
-				renderer.render( scene, camera );
-
-			}
+function render() {
+  renderer.render(scene, camera);
+}
