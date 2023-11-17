@@ -237,12 +237,16 @@ function init() {
 
   // Create a plane geometry and material
   const geometry = new THREE.PlaneGeometry(0.5, 0.5);
-  planeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+  planeMaterial1 = new THREE.MeshPhongMaterial({ color: 0xffffff });
+  planeMaterial2 = new THREE.MeshPhongMaterial({ color: Math.Random()*0xffffff });
 
   // Create the plane mesh
-  plane = new THREE.Mesh(geometry, planeMaterial);
-  plane.position.set(0,0,-3);
-  scene.add(plane);
+  plane1 = new THREE.Mesh(geometry, planeMaterial1);
+  plane1.position.set(0,0,-3);
+  scene.add(plane1);
+  plane2 = new THREE.Mesh(geometry, planeMaterial2);
+  plane2.position.set(1,1,-3);
+  scene.add(plane2);
 
   controller = renderer.xr.getController(0);
   controller.addEventListener('select', onSelect);
@@ -253,7 +257,8 @@ function init() {
 
 function onSelect() {
   // Change the color of the plane's material when selected
-  planeMaterial.color.setRGB(Math.random(), Math.random(), Math.random());
+  planeMaterial1.color.setRGB(Math.random(), Math.random(), Math.random());
+  planeMaterial2.color.setRGB(Math.random(), Math.random(), Math.random());
 }
 
 function onWindowResize() {
