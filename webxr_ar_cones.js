@@ -241,7 +241,7 @@ let camera, scene, renderer;
 
 				//
 
-				const geometry = new THREE.CylinderGeometry( 0, 0.05, 0.2, 32 ).rotateX( Math.PI / 2 );
+				const geometry = new THREE.PlaneGeometry( 1,1);
 
 				function onSelect() {
 
