@@ -211,7 +211,7 @@ class ARButton {
 let camera, scene, renderer;
 let controller;
 let plane1, plane2; // New variables for the planes
-let planeMaterial; // Shared material for both planes
+let planeMaterials; // Array to store materials for both planes
 
 init();
 animate();
@@ -236,18 +236,21 @@ function init() {
 
   document.body.appendChild(ARButton.createButton(renderer));
 
-  // Create a shared plane material
-  planeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+  // Create an array to store materials for both planes
+  planeMaterials = [
+    new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
+    new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
+  ];
 
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane1 = new THREE.Mesh(geometry1, planeMaterial);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
   scene.add(plane1);
 
   // Create the second plane and position it
   const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane2 = new THREE.Mesh(geometry2, planeMaterial);
+  plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
   plane2.position.set(1, 0, -1); // Move the second plane to the right
   scene.add(plane2);
 
@@ -259,8 +262,9 @@ function init() {
 }
 
 function onSelect() {
-  // Change the color of both planes' material when selected
-  planeMaterial.color.setRGB(Math.random(), Math.random(), Math.random());
+  // Change the color of each plane's material separately when selected
+  planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
+  planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
 }
 
 function onWindowResize() {
