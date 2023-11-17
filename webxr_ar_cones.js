@@ -236,11 +236,12 @@ function init() {
   document.body.appendChild(ARButton.createButton(renderer));
 
   // Create a plane geometry and material
-  const geometry = new THREE.PlaneGeometry(1, 1);
+  const geometry = new THREE.PlaneGeometry(0.5, 0.5);
   planeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 
   // Create the plane mesh
   plane = new THREE.Mesh(geometry, planeMaterial);
+  plane.position.set(0,0,-3);
   scene.add(plane);
 
   controller = renderer.xr.getController(0);
