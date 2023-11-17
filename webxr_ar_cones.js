@@ -241,15 +241,16 @@ let camera, scene, renderer;
 
 				//
 
-				const geometry = new THREE.PlaneGeometry( 1,1);
+				const geometry = new THREE.PlaneGeometry( 0.5,0.5);
+				const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+
+				const mesh = new THREE.Mesh( geometry, material );
+				mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
+				mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+				scene.add( mesh );
 
 				function onSelect() {
-
-					const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-					const mesh = new THREE.Mesh( geometry, material );
-					mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
-					mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
-					scene.add( mesh );
+					mesh.material.color.setHex( 0xffffff * Math.random() );
 
 				}
 
