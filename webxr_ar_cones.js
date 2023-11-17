@@ -246,26 +246,17 @@ function init() {
   // Load an audio file
   audioFile = './sounds/drums.mp3'; // Change to your audio file
 
-  if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
-    // Load audio using THREE.AudioLoader for iOS devices
-    const loader = new THREE.AudioLoader();
-    loader.load(audioFile, function (buffer) {
-      audio.setBuffer(buffer);
-      audio.setLoop(true); // Set to true if you want the audio to loop
-      audio.setVolume(0.5); // Adjust the volume if needed
-      audio.play();
-    });
-  } else {
-    // Load audio using HTML5 Audio for other devices
-    const mediaElement = new Audio(audioFile);
-    mediaElement.play();
-    audio.setMediaElementSource(mediaElement);
+  // Load audio using THREE.AudioLoader
+  const loader = new THREE.AudioLoader();
+  loader.load(audioFile, function (buffer) {
+    audio.setBuffer(buffer);
     audio.setLoop(true); // Set to true if you want the audio to loop
     audio.setVolume(0.5); // Adjust the volume if needed
-  }
+  });
 
   // Attach the listener to the camera
   camera.add(listener);
+
 
   // Create an array to store materials for both planes
   planeMaterials = [
@@ -298,7 +289,6 @@ function onSelect() {
   planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
 
   // Pause and play the audio to trigger a restart
-  audio.pause();
   audio.play();
 }
 
