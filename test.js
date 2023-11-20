@@ -208,191 +208,158 @@ class ARButton {
 
 }
 
-
-
 let camera, scene, renderer;
 let controller;
-let plane1, plane2, plane3, plane4;
-let planeMaterials;
+let plane1, plane2, plane3, plane4; // New variables for the planes
+let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
 let isplaying = false;
-let beam;
-
 
 init();
 animate();
 
 function init() {
-	const container = document.createElement('div');
-	document.body.appendChild(container);
+  const container = document.createElement('div');
+  document.body.appendChild(container);
 
-	scene = new THREE.Scene();
+  scene = new THREE.Scene();
 
-	camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-	const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
-	light.position.set(0.5, 1, 0.25);
-	scene.add(light);
+  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
+  light.position.set(0.5, 1, 0.25);
+  scene.add(light);
 
-	renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.xr.enabled = true;
-	container.appendChild(renderer.domElement);
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.xr.enabled = true;
+  container.appendChild(renderer.domElement);
 
-	document.body.appendChild(ARButton.createButton(renderer));
+  document.body.appendChild(ARButton.createButton(renderer));
 
-	// Initialize Web Audio API
-	listener = new THREE.AudioListener();
-	audio = new THREE.Audio(listener);
-	audioFile = './sounds/drums.mp3';
+  // Initialize Web Audio API
+  listener = new THREE.AudioListener();
 
-	const loader = new THREE.AudioLoader();
-	loader.load(audioFile, function (buffer) {
-	audio.setBuffer(buffer);
-	audio.setLoop(true);
-	audio.setVolume(0.5);
-	});
+  // Create an Audio object and link it to the listener
+  audio = new THREE.Audio(listener);
+
+  // Load an audio file
+  audioFile = './sounds/drums.mp3'; // Change to your audio file
+
+  // Load audio using THREE.AudioLoader
+  const loader = new THREE.AudioLoader();
+  loader.load(audioFile, function (buffer) {
+    audio.setBuffer(buffer);
+    audio.setLoop(true); // Set to true if you want the audio to loop
+    audio.setVolume(0.5); // Adjust the volume if needed
+  });
+
+  // Attach the listener to the camera
+  camera.add(listener);
 
 
-	camera.add(listener);
+  // Create an array to store materials for both planes
+  planeMaterials = [
+    new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }), // Red material for plane1
+    new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide }), // Green material for plane2
+	new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide }), // Blue material for plane3
+	new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide }), // Yellow material for plane4
+  ];
 
-	const raycaster = new THREE.Raycaster();
+  // Create the first plane and position it
+  const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
+  plane1.position.set(-1, 0, -1); // Move the first plane to the left
+  plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
+  scene.add(plane1);
 
-	/* // Create an AnalyserNode
-	const analyser = new THREE.AudioAnalyser(audio, 32);
+  // Create the second plane and position it
+  const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
+  plane2.position.set(1, 0, -1); // Move the second plane to the right
+  plane2.rotateY( - Math.PI / 4); // Rotate the plane -45 degrees
+  scene.add(plane2);
 
-	// Create a texture for the FFT visualization
-	const texture = new THREE.DataTexture(analyser.data, analyser.data.length / 3, 1, THREE.LuminanceFormat);
-	texture.minFilter = THREE.NearestFilter;
-	texture.magFilter = THREE.NearestFilter;
+  // Create the third plane and position it
+  const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
+  plane3.position.set(-1, 0, 1); // Move the third plane to the left
+  plane3.rotateY(-Math.PI / 4); // Rotate the plane -45 degrees
+  scene.add(plane3);
 
-	// Create a material using the texture
-	const fftMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
- */
-	// Create an array to store materials for both planes
-	planeMaterials = [
-		new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }), // Red material for plane1
-		new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide }), // Green material for plane2
-		new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide }), // Blue material for plane3
-		new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide }), // Yellow material for plane4
-	  ];
-	// Create the first plane and assign the FFT material
-	const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-	plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
-	plane1.position.set(-1, 0, -1);
-	plane1.rotateY(Math.PI / 4);
-	scene.add(plane1);
+  // Create the fourth plane and position it
+  const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
+  plane4.position.set(1, 0, 1); // Move the fourth plane to the right
+  plane4.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
+  scene.add(plane4);
 
-  	// Create the second plane and position it
-  	const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
-  	plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
-  	plane2.position.set(1, 0, -1); // Move the second plane to the right
-  	plane2.rotateY( - Math.PI / 4); // Rotate the plane -45 degrees
-  	scene.add(plane2);
+  controller = renderer.xr.getController(0);
+  controller.addEventListener('select', onSelect);
+  scene.add(controller);
 
-	// Create the third plane and position it
-	const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
-	plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
-	plane3.position.set(-1, 0, 1); // Move the third plane to the left
-	plane3.rotateY(-Math.PI / 4); // Rotate the plane -45 degrees
-	scene.add(plane3);
-
-	// Create the fourth plane and position it
-	const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
-	plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
-	plane4.position.set(1, 0, 1); // Move the fourth plane to the right
-	plane4.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
-	scene.add(plane4);
-
-	controller = renderer.xr.getController(0);
-	controller.addEventListener('select', onSelect);
-	scene.add(controller);
-
-	const beamGeometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1)]);
-  const beamMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-  beam = new THREE.Line(beamGeometry, beamMaterial);
-  beam.name = 'beam';
-  controller.add(beam);
-
-	window.addEventListener('resize', onWindowResize);
+  window.addEventListener('resize', onWindowResize);
 }
 
 function onSelect() {
+	// Change the color of each plane's material separately when selected
+	planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
+	planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
+	planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
+	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
+  
 	// Pause and play the audio to trigger a restart
+	
+  
+	// Check if the controller intersects with any of the planes
 	const intersections = getIntersections(controller);
-
-  if (intersections.length > 0) {
-    const selectedObject = intersections[0].object;
-
-    if (selectedObject === plane1 || selectedObject === plane2 || selectedObject === plane3 || selectedObject === plane4) {
-      // Play or pause audio based on intersection with one of the planes
-      if (!isplaying) {
-        audio.play();
-        isplaying = true;
-      } else {
-        audio.pause();
-        isplaying = false;
-      }
-    }
+  
+	// If there is an intersection, play the audio
+	if (intersections.length > 0) {
+		if (!isplaying) {
+			audio.play();
+			isplaying = true;
+		  } else {
+			audio.pause();
+			isplaying = false;
+		  }
+	}
   }
-}
-
-function getIntersections(controller) {
+  
+  function getIntersections(controller) {
 	const tempMatrix = new THREE.Matrix4();
-	const worldPosition = new THREE.Vector3();
-	const direction = new THREE.Vector3();
-	const ray = new THREE.Ray();
-  
-	// Set the ray's origin to the controller's position
-	ray.origin.setFromMatrixPosition(controller.matrixWorld);
-  
-	// Set the ray's direction based on the controller's orientation
-	direction.set(0, 0, -1).applyQuaternion(controller.quaternion);
-	ray.direction.copy(direction);
-  
-	// Update the beam's geometry to represent the controller's direction
-	beam.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), direction.clone().multiplyScalar(-5)]);
-  
-	// Check for intersections with the planes
-	const planes = [plane1, plane2, plane3, plane4];
+	const raycaster = new THREE.Raycaster();
 	const intersections = [];
   
+	// Update the raycaster with the controller's position and direction
+	const controllerMatrix = controller.matrixWorld;
+	raycaster.ray.origin.setFromMatrixPosition(controllerMatrix);
+	raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix.identity().extractRotation(controllerMatrix));
+  
+	// Check for intersections with each plane
+	const planes = [plane1, plane2, plane3, plane4];
 	for (const plane of planes) {
-	  tempMatrix.identity().extractRotation(plane.matrixWorld);
-  
-	  ray.direction.applyMatrix4(tempMatrix);
-  
-	  const intersection = ray.intersectObject(plane);
-  
-	  if (intersection) {
-		worldPosition.setFromMatrixPosition(intersection[0].object.matrixWorld);
-		intersections.push({
-		  object: intersection[0].object,
-		});
+	  const intersection = raycaster.intersectObject(plane);
+	  if (intersection.length > 0) {
+		intersections.push(intersection[0]);
 	  }
 	}
   
 	return intersections;
   }
+  
 
 function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
-	//raycaster.update();
-	renderer.setAnimationLoop(render);
+  renderer.setAnimationLoop(render);
 }
 
 function render() {
-	/* analyser.getFrequencyData();
-
-    // Update the FFT texture with the new data
-    texture.image.data.set(analyser.data);
-    texture.needsUpdate = true;
- */
-  	renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
