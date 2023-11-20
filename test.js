@@ -311,20 +311,13 @@ function init() {
 }
 
 function onSelect() {
-	// Use the raycaster to check which object the controller is pointing at
-	raycaster.set(controller.position, controller.getWorldDirection(new THREE.Vector3()));
-	const intersects = raycaster.intersectObjects(plane1);
-
-  
-	if (intersects.length > 0) {
 	  // Pause and play the audio to trigger a restart
-	  if (!isplaying) {
+	if (!isplaying) {
 		audio.play();
 		isplaying = true;
-	  } else {
+	} else {
 		audio.pause();
 		isplaying = false;
-	  }
 	}
   }
 
