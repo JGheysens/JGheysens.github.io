@@ -262,6 +262,8 @@ function init() {
   planeMaterials = [
     new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
     new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
+	new THREE.MeshPhongMaterial({ color: 0x0000ff }),
+	new THREE.MeshPhongMaterial({ color: 0xffff00 })
   ];
 
   // Create the first plane and position it
@@ -276,6 +278,18 @@ function init() {
   plane2.position.set(1, 0, -1); // Move the second plane to the right
   scene.add(plane2);
 
+  const geometry3 = new THREE.PlaneGeometry(0.5,0.5);
+  plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
+  plane3.position.set(-1,-1,-1);
+  plane3.rotation.x = - Math.PI / 2;
+  scene.add(plane3);
+
+  const geometry4 = new THREE.PlaneGeometry(0.5,0.5);
+  plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
+  plane4.position.set(11,-1,-1);
+  plane1.rotation.x = Math.PI / 2;
+  scene.add(plane4);
+
   controller = renderer.xr.getController(0);
   controller.addEventListener('select', onSelect);
   scene.add(controller);
@@ -287,9 +301,17 @@ function onSelect() {
   // Change the color of each plane's material separately when selected
   planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
   planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
+  planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
+  planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
 
   // Pause and play the audio to trigger a restart
-  audio.play();
+  if (audio.isPlaying()){
+	audio.pause();
+  }
+  else {
+	audio.play();
+  }
+
 }
 
 function onWindowResize() {
