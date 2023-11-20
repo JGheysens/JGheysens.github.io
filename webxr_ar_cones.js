@@ -263,7 +263,7 @@ function init() {
     new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
     new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
 	new THREE.MeshPhongMaterial({ color: 0x0000ff }),
-	new THREE.MeshPhongMaterial({ color: 0xffff00 })
+	new THREE.MeshPhongMaterial({ color: 0xffff00 }),
   ];
 
   // Create the first plane and position it
