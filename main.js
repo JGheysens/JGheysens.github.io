@@ -270,6 +270,7 @@ function init() {
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
   plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
+  plane1.rotateY(Math.PI / 2); // Rotate the plane 90 degrees
   scene.add(plane1);
 
   // Create the second plane and position it
