@@ -260,10 +260,10 @@ function init() {
 
   // Create an array to store materials for both planes
   planeMaterials = [
-    new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
-    new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
-	new THREE.MeshPhongMaterial({ color: 0x0000ff }), // Blue material for plane3
-	new THREE.MeshPhongMaterial({ color: 0xffff00 }), // Yellow material for plane4
+    new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }), // Red material for plane1
+    new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide }), // Green material for plane2
+	new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide }), // Blue material for plane3
+	new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide }), // Yellow material for plane4
   ];
 
   // Create the first plane and position it
