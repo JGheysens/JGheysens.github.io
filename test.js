@@ -317,10 +317,6 @@ function onSelect() {
 
   
 	if (intersects.length > 0) {
-  
-	  // Change the color of the selected plane's material
-	  plane1.material.color.setRGB(Math.random(), Math.random(), Math.random());
-  
 	  // Pause and play the audio to trigger a restart
 	  if (!isplaying) {
 		audio.play();
