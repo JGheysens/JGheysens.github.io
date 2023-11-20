@@ -311,32 +311,24 @@ function init() {
 }
 
 function onSelect() {
-	const controllerPosition = new THREE.Vector3();
-  controller.position.clone(controllerPosition);
-  const offset = new THREE.Vector3(0, 0, -1); // Adjust the offset as needed
-  const direction = new THREE.Vector3();
-  controller.getWorldDirection(direction);
-  const raycasterOrigin = controllerPosition.add(offset);
+	// Use the raycaster to check which object the controller is pointing at
+	raycaster.set(controller.position, controller.getWorldDirection(new THREE.Vector3()));
+	const intersects = raycaster.intersectObjects(plane1);
 
-  raycaster.set(raycasterOrigin, direction);
-
-  const intersects = raycaster.intersectObjects([plane1, plane2, plane3, plane4]);
-
-  if (intersects.length > 0) {
-    // Controller is pointing at one of the planes
-    const selectedPlane = intersects[0].object;
-
-    // Change the color of the selected plane's material
-    selectedPlane.material.color.setRGB(Math.random(), Math.random(), Math.random());
-
-    // Pause and play the audio to trigger a restart
-    if (!isplaying) {
-      audio.play();
-      isplaying = true;
-    } else {
-      audio.pause();
-      isplaying = false;
-    }
+  
+	if (intersects.length > 0) {
+  
+	  // Change the color of the selected plane's material
+	  plane1.material.color.setRGB(Math.random(), Math.random(), Math.random());
+  
+	  // Pause and play the audio to trigger a restart
+	  if (!isplaying) {
+		audio.play();
+		isplaying = true;
+	  } else {
+		audio.pause();
+		isplaying = false;
+	  }
 	}
   }
 
