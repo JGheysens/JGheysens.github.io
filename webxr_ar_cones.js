@@ -270,25 +270,25 @@ function init() {
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
   plane1 = new THREE.Mesh(geometry1, planeMaterials[4]);
-  placeAndRotatePlane(plane1, -Math.PI / 2); // Rotate it to face the camera
+  plane1.position.set(-1, 0, -1);
   scene.add(plane1);
 
   // Create the second plane and position it
   const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
-  placeAndRotatePlane(plane2, Math.PI / 2); // Rotate it to face the camera
+  plane2.positon.set(1,0,-1)
   scene.add(plane2);
 
   // Create the third plane and position it
   const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
   plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
-  placeAndRotatePlane(plane3, Math.PI); // Rotate it to face the camera
+  plane3.position.set(-1, 0, 1);
   scene.add(plane3);
 
   // Create the fourth plane and position it
   const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
   plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
-  placeAndRotatePlane(plane4, 0); // Rotate it to face the camera
+  plane4.position.set(1, 0, 1);
   scene.add(plane4);
 
   controller = renderer.xr.getController(0);
@@ -315,15 +315,6 @@ function onSelect() {
 
 }
 
-function placeAndRotatePlane(plane, rotationY) {
-	plane.rotateY( rotationY);
-	const radius = 1.5; // Adjust the radius as needed
-	const angle = rotationY;
-	const x = radius * Math.cos(angle);
-	const z = radius * Math.sin(angle);
-	plane.position.set(x, 0, z);
-  }
-  
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
