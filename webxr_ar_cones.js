@@ -315,7 +315,7 @@ function onSelect() {
 }
 
 function placeAndRotatePlane(plane, rotationY) {
-	plane.rotation.set(0, rotationY, 0);
+	plane.rotateY( rotationY);
 	const radius = 1.5; // Adjust the radius as needed
 	const angle = rotationY;
 	const x = radius * Math.cos(angle);
