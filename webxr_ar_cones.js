@@ -210,7 +210,7 @@ class ARButton {
 
 let camera, scene, renderer;
 let controller;
-let plane1, plane2, plane3, plane4; // New variables for the planes
+let plane1, plane2; // New variables for the planes
 let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
 
@@ -262,33 +262,19 @@ function init() {
   planeMaterials = [
     new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
     new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
-	new THREE.MeshPhongMaterial({ color: 0x0000ff }),
-	new THREE.MeshPhongMaterial({ color: 0xffff00 }),
   ];
 
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
   plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
-  plane1.position.set(1, 0, -1);
+  plane1.position.set(-1, 0, -1); // Move the first plane to the left
   scene.add(plane1);
 
   // Create the second plane and position it
   const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
-  plane2.positon.set(-1, 0, -1);
+  plane2.position.set(1, 0, -1); // Move the second plane to the right
   scene.add(plane2);
-
-  // Create the third plane and position it
-  const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
-  plane3.position.set(0, 0, 0.5); // Move it back a bit
-  scene.add(plane3);
-
-  // Create the fourth plane and position it
-  const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
-  plane4.position.set(0, 0, -0.5); // Move it back a bit
-  scene.add(plane4);
 
   controller = renderer.xr.getController(0);
   controller.addEventListener('select', onSelect);
@@ -301,15 +287,10 @@ function onSelect() {
   // Change the color of each plane's material separately when selected
   planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
   planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
-  planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
-  planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
 
   // Pause and play the audio to trigger a restart
-  audio.pause();
   audio.play();
-
 }
-  
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
