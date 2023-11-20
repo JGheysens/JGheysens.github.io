@@ -228,7 +228,17 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-	// ... (unchanged)
+	const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
+	light.position.set(0.5, 1, 0.25);
+	scene.add(light);
+
+	renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.xr.enabled = true;
+	container.appendChild(renderer.domElement);
+
+	document.body.appendChild(ARButton.createButton(renderer));
 
 	// Initialize Web Audio API
 	listener = new THREE.AudioListener();
@@ -256,6 +266,13 @@ function init() {
 	// Create a material using the texture
 	const fftMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 
+	// Create an array to store materials for both planes
+	planeMaterials = [
+		new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }), // Red material for plane1
+		new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide }), // Green material for plane2
+		new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide }), // Blue material for plane3
+		new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide }), // Yellow material for plane4
+	  ];
 	// Create the first plane and assign the FFT material
 	const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
 	plane1 = new THREE.Mesh(geometry1, fftMaterial);
