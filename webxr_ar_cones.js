@@ -210,98 +210,78 @@ class ARButton {
 
 let camera, scene, renderer;
 let controller;
-let plane1, plane2; // New variables for the planes
-let planeMaterials; // Array to store materials for both planes
-let listener, audio, audioFile;
 
 init();
 animate();
 
 function init() {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
 
-  scene = new THREE.Scene();
+	const container = document.createElement( 'div' );
+	document.body.appendChild( container );
 
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+	scene = new THREE.Scene();
 
-  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
-  light.position.set(0.5, 1, 0.25);
-  scene.add(light);
+	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.xr.enabled = true;
-  container.appendChild(renderer.domElement);
+	const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
+	light.position.set( 0.5, 1, 0.25 );
+	scene.add( light );
 
-  document.body.appendChild(ARButton.createButton(renderer));
+	//
 
-  // Initialize Web Audio API
-  listener = new THREE.AudioListener();
+	renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.xr.enabled = true;
+	container.appendChild( renderer.domElement );
 
-  // Create an Audio object and link it to the listener
-  audio = new THREE.Audio(listener);
+	//
 
-  // Load an audio file
-  audioFile = './sounds/drums.mp3'; // Change to your audio file
+	document.body.appendChild( ARButton.createButton( renderer ) );
 
-  // Load audio using THREE.AudioLoader
-  const loader = new THREE.AudioLoader();
-  loader.load(audioFile, function (buffer) {
-    audio.setBuffer(buffer);
-    audio.setLoop(true); // Set to true if you want the audio to loop
-    audio.setVolume(0.5); // Adjust the volume if needed
-  });
+	//
 
-  // Attach the listener to the camera
-  camera.add(listener);
+	const geometry = new THREE.CylinderGeometry( 0, 0.05, 0.2, 32 ).rotateX( Math.PI / 2 );
 
+	function onSelect() {
 
-  // Create an array to store materials for both planes
-  planeMaterials = [
-    new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
-    new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
-  ];
+		const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+		const mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
+		mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+		scene.add( mesh );
 
-  // Create the first plane and position it
-  const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
-  plane1.position.set(-1, 0, -1); // Move the first plane to the left
-  scene.add(plane1);
+	}
 
-  // Create the second plane and position it
-  const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
-  plane2.position.set(1, 0, -1); // Move the second plane to the right
-  scene.add(plane2);
+	controller = renderer.xr.getController( 0 );
+	controller.addEventListener( 'select', onSelect );
+	scene.add( controller );
 
-  controller = renderer.xr.getController(0);
-  controller.addEventListener('select', onSelect);
-  scene.add(controller);
+	//
 
-  window.addEventListener('resize', onWindowResize);
-}
+	window.addEventListener( 'resize', onWindowResize );
 
-function onSelect() {
-  // Change the color of each plane's material separately when selected
-  planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
-  planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
-
-  // Pause and play the audio to trigger a restart
-  audio.play();
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
 }
 
+//
+
 function animate() {
-  renderer.setAnimationLoop(render);
+
+	renderer.setAnimationLoop( render );
+
 }
 
 function render() {
-  renderer.render(scene, camera);
+
+	renderer.render( scene, camera );
+
 }
