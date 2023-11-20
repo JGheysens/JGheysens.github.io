@@ -210,7 +210,7 @@ class ARButton {
 
 let camera, scene, renderer;
 let controller;
-let plane1, plane2; // New variables for the planes
+let plane1, plane2, plane3, plane4; // New variables for the planes
 let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
 
@@ -263,8 +263,7 @@ function init() {
     new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
     new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
 	new THREE.MeshPhongMaterial({ color: 0x0000ff }),
-	new THREE.MeshPhongMaterial({ color: 0xffff00 }),
-	new THREE.MeshBasicMaterial({ color: 0xff00ff, side: THREE.DoubleSide })
+	new THREE.MeshPhongMaterial({ color: 0xffff00 })
   ];
 
   // Create the first plane and position it
