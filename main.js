@@ -1,4 +1,6 @@
+// import * as THREE from 'three';
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+
 class ARButton {
 
 	static createButton( renderer, sessionInit = {} ) {
@@ -179,26 +181,26 @@ class ARButton {
 		} else {
 
 			const message = document.createElement( 'a' );
-            window.isSecureContext === true;
-			// if ( window.isSecureContext === false ) {
 
-			// 	message.href = document.location.href.replace( /^http:/, 'https:' );
-			// 	message.innerHTML = 'WEBXR NEEDS HTTPS'; // TODO Improve message
+			if ( window.isSecureContext === false ) {
 
-			// } else {
+				message.href = document.location.href.replace( /^http:/, 'https:' );
+				message.innerHTML = 'WEBXR NEEDS HTTPS'; // TODO Improve message
 
-			// 	message.href = 'https://immersiveweb.dev/';
-			// 	message.innerHTML = 'WEBXR NOT AVAILABLE';
+			} else {
 
-			// }
+				message.href = 'https://immersiveweb.dev/';
+				message.innerHTML = 'WEBXR NOT AVAILABLE';
 
-			// message.style.left = 'calc(50% - 90px)';
-			// message.style.width = '180px';
-			// message.style.textDecoration = 'none';
+			}
 
-			// stylizeElement( message );
+			message.style.left = 'calc(50% - 90px)';
+			message.style.width = '180px';
+			message.style.textDecoration = 'none';
 
-			// return message;
+			stylizeElement( message );
+
+			return message;
 
 		}
 
@@ -208,112 +210,114 @@ class ARButton {
 
 let camera, scene, renderer;
 let controller;
+let plane1, plane2, plane3, plane4; // New variables for the planes
+let planeMaterials; // Array to store materials for both planes
+let listener, audio, audioFile;
 
 init();
 animate();
 
 function init() {
-    const container = document.createElement('div');
-    document.body.appendChild(container);
+  const container = document.createElement('div');
+  document.body.appendChild(container);
 
-    scene = new THREE.Scene();
+  scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
-    
-    const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-    light.position.set(0.5, 1, 0.25);
-    scene.add(light);
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.xr.enabled = true;
-    container.appendChild(renderer.domElement);
+  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
+  light.position.set(0.5, 1, 0.25);
+  scene.add(light);
 
-    document.body.appendChild(ARButton.createButton(renderer));
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.xr.enabled = true;
+  container.appendChild(renderer.domElement);
 
-    /* const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
- */
-    
+  document.body.appendChild(ARButton.createButton(renderer));
 
-    controller = renderer.xr.getController(0);
-    controller.addEventListener('select', onSelect);
-    scene.add(controller);
+  // Initialize Web Audio API
+  listener = new THREE.AudioListener();
 
-    window.addEventListener('resize', onWindowResize);
-	function playAudio() {
-		const listener = new THREE.AudioListener();
+  // Create an Audio object and link it to the listener
+  audio = new THREE.Audio(listener);
 
-	const audio = new THREE.Audio( listener );
-	const file = './sounds/drums.mp3';
+  // Load an audio file
+  audioFile = './sounds/drums.mp3'; // Change to your audio file
 
-	if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+  // Load audio using THREE.AudioLoader
+  const loader = new THREE.AudioLoader();
+  loader.load(audioFile, function (buffer) {
+    audio.setBuffer(buffer);
+    audio.setLoop(true); // Set to true if you want the audio to loop
+    audio.setVolume(0.5); // Adjust the volume if needed
+  });
 
-		const loader = new THREE.AudioLoader();
-		loader.load( file, function ( buffer ) {
+  // Attach the listener to the camera
+  camera.add(listener);
 
-			audio.setBuffer( buffer );
-			audio.play();
 
-		} );
+  // Create an array to store materials for both planes
+  planeMaterials = [
+    new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
+    new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
+	new THREE.MeshPhongMaterial({ color: 0x0000ff }), // Blue material for plane3
+	new THREE.MeshPhongMaterial({ color: 0xffff00 }), // Yellow material for plane4
+  ];
 
-	} else {
+  // Create the first plane and position it
+  const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
+  plane1.position.set(-1, 0, -1); // Move the first plane to the left
+  scene.add(plane1);
 
-		const mediaElement = new Audio( file );
-		mediaElement.play();
+  // Create the second plane and position it
+  const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
+  plane2.position.set(1, 0, -1); // Move the second plane to the right
+  scene.add(plane2);
 
-		audio.setMediaElementSource( mediaElement );
+  // Create the third plane and position it
+  const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
+  plane3.position.set(-1, 0, 1); // Move the third plane to the left
+  scene.add(plane3);
 
-	};
-	}
+  // Create the fourth plane and position it
+  const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
+  plane4.position.set(1, 0, 1); // Move the fourth plane to the right
+  scene.add(plane4);
 
-    /* dolly = new THREE.Object3D();
-    dolly.position.set(0, 0, 5);
-    dolly.add(camera);
-    scene.add(dolly);
+  controller = renderer.xr.getController(0);
+  controller.addEventListener('select', onSelect);
+  scene.add(controller);
 
-    dummyCam = new THREE.Object3D();
-    camera.add(dummyCam); */
+  window.addEventListener('resize', onWindowResize);
+}
 
-    function onSelect(){
-        cube.material.color.set( Math.random() * 0xffffff );
-		const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-        const mesh = new THREE.Mesh( geometry, material );
-        mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
-        mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
-        scene.add( mesh );
-		playAudio();
-        /* const dt =clock.getDelta();
-        quaternion=dolly.quaternion.clone();
-        dolly.quaternion.copy(dummyCam.getWorldQuaternion());
-        dolly.translateZ(-dt*speed);
-        dolly.position.y=0;
-        dolly.quaternion.copy(quaternion); */
-    }
+function onSelect() {
+  // Change the color of each plane's material separately when selected
+  planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
+  planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
+  planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
+  planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
+
+  // Pause and play the audio to trigger a restart
+  audio.play();
 }
 
 function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-//
-
 function animate() {
-
-    renderer.setAnimationLoop( render );
-
+  renderer.setAnimationLoop(render);
 }
 
 function render() {
-    
-    renderer.render( scene, camera );
-
+  renderer.render(scene, camera);
 }
