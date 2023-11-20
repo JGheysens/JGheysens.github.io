@@ -268,14 +268,14 @@ function init() {
 
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane1 = new THREE.Mesh(geometry1, planeMaterials[4]);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(1, 0, -1);
   scene.add(plane1);
 
   // Create the second plane and position it
   const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
-  plane2.positon.set(-1,0,-1);
+  plane2.positon.set(-1, 0, -1);
   scene.add(plane2);
 
   // Create the third plane and position it
@@ -305,6 +305,7 @@ function onSelect() {
   planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
 
   // Pause and play the audio to trigger a restart
+  audio.pause();
   audio.play();
 
 }
