@@ -258,7 +258,6 @@ function init() {
   // Attach the listener to the camera
   camera.add(listener);
 
-  analyser = new THREE.AudioAnalyser(audio, 128);
 
   // Create an array to store materials for both planes
   planeMaterials = [
@@ -270,8 +269,7 @@ function init() {
 
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  const material1 = createShaderMaterial();
-  plane1 = new THREE.Mesh(geometry1, material1);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
   plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
   scene.add(plane1);
@@ -322,46 +320,6 @@ function onSelect() {
   }
 }
 
-function createShaderMaterial() {
-	// Shader code as strings
-	const vertexShaderCode = `
-	  varying vec2 vUv;
-  
-	  void main() {
-		  vUv = uv;
-		  gl_Position = vec4(position, 1.0);
-	  }
-	`;
-  
-	const fragmentShaderCode = `
-	  uniform sampler2D tAudioData;
-	  varying vec2 vUv;
-  
-	  void main() {
-		  vec3 backgroundColor = vec3(0.125, 0.125, 0.125);
-		  vec3 color = vec3(1.0, 1.0, 0.0);
-  
-		  float f = texture2D(tAudioData, vec2(vUv.x, 0.0)).r;
-  
-		  float i = step(vUv.y, f) * step(f - 0.0125, vUv.y);
-  
-		  gl_FragColor = vec4(mix(backgroundColor, color, i), 1.0);
-	  }
-	`;
-  
-	const format = (renderer.capabilities.isWebGL2) ? THREE.RedFormat : THREE.LuminanceFormat;
-  
-	uniforms = {
-	  tAudioData: { value: new THREE.DataTexture(analyser.data, 128, 1, format) }
-	};
-  
-	return new THREE.ShaderMaterial({
-	  uniforms: uniforms,
-	  vertexShader: vertexShaderCode,
-	  fragmentShader: fragmentShaderCode
-	});
-  }
-
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -369,8 +327,6 @@ function onWindowResize() {
 }
 
 function animate() {
-  analyser.getFrequencyData();
-  uniforms.tAudioData.value.needsUpdate = true;
   renderer.setAnimationLoop(render);
 }
 
