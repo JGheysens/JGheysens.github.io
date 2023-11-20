@@ -269,25 +269,25 @@ function init() {
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
   plane1 = new THREE.Mesh(geometry1, planeMaterials[4]);
-  plane1.position.set(-1, 0, -1);
+  plane1.position.set(1, 0, -1);
   scene.add(plane1);
 
   // Create the second plane and position it
   const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
-  plane2.positon.set(1,0,-1)
+  plane2.positon.set(-1,0,-1);
   scene.add(plane2);
 
   // Create the third plane and position it
   const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
   plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
-  plane3.position.set(-1, 0, 1);
+  plane3.position.set(0, 0, 0.5); // Move it back a bit
   scene.add(plane3);
 
   // Create the fourth plane and position it
   const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
   plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
-  plane4.position.set(1, 0, 1);
+  plane4.position.set(0, 0, -0.5); // Move it back a bit
   scene.add(plane4);
 
   controller = renderer.xr.getController(0);
@@ -305,15 +305,10 @@ function onSelect() {
   planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
 
   // Pause and play the audio to trigger a restart
-  if (audio.isPlaying()){
-	audio.pause();
-  }
-  else {
-	audio.play();
-  }
+  audio.play();
 
 }
-
+  
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
