@@ -216,8 +216,8 @@ let plane1, plane2, plane3, plane4;
 let planeMaterials;
 let listener, audio, audioFile;
 let isplaying = false;
-let raycaster;
-let intersectedObject = null;
+let beam;
+
 
 init();
 animate();
@@ -309,6 +309,12 @@ function init() {
 	controller.addEventListener('select', onSelect);
 	scene.add(controller);
 
+	const beamGeometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1)]);
+  const beamMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+  beam = new THREE.Line(beamGeometry, beamMaterial);
+  beam.name = 'beam';
+  controller.add(beam);
+
 	window.addEventListener('resize', onWindowResize);
 }
 
@@ -316,20 +322,20 @@ function onSelect() {
 	// Pause and play the audio to trigger a restart
 	const intersections = getIntersections(controller);
 
-	if (intersections.length > 0) {
-	const selectedObject = intersections[0].object;
+  if (intersections.length > 0) {
+    const selectedObject = intersections[0].object;
 
-	if (selectedObject === plane1 || selectedObject === plane2 || selectedObject === plane3 || selectedObject === plane4) {
-		// Play or pause audio based on intersection with one of the planes
-		if (!isplaying) {
-		audio.play();
-		isplaying = true;
-		} else {
-		audio.pause();
-		isplaying = false;
-		}
-	}
-	}
+    if (selectedObject === plane1 || selectedObject === plane2 || selectedObject === plane3 || selectedObject === plane4) {
+      // Play or pause audio based on intersection with one of the planes
+      if (!isplaying) {
+        audio.play();
+        isplaying = true;
+      } else {
+        audio.pause();
+        isplaying = false;
+      }
+    }
+  }
 }
 
 function getIntersections(controller) {
@@ -337,39 +343,38 @@ function getIntersections(controller) {
 	const worldPosition = new THREE.Vector3();
 	const direction = new THREE.Vector3();
 	const ray = new THREE.Ray();
-
+  
 	// Set the ray's origin to the controller's position
 	ray.origin.setFromMatrixPosition(controller.matrixWorld);
-
+  
 	// Set the ray's direction based on the controller's orientation
 	direction.set(0, 0, -1).applyQuaternion(controller.quaternion);
 	ray.direction.copy(direction);
-
+  
+	// Update the beam's geometry to represent the controller's direction
+	beam.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), direction.clone().multiplyScalar(-5)]);
+  
 	// Check for intersections with the planes
 	const planes = [plane1, plane2, plane3, plane4];
 	const intersections = [];
-
+  
 	for (const plane of planes) {
-		tempMatrix.identity().extractRotation(plane.matrixWorld);
-
-		ray.direction.applyMatrix4(tempMatrix);
-
-		const intersection = ray.intersectObject(plane);
-
-		if (intersection) {
+	  tempMatrix.identity().extractRotation(plane.matrixWorld);
+  
+	  ray.direction.applyMatrix4(tempMatrix);
+  
+	  const intersection = ray.intersectObject(plane);
+  
+	  if (intersection) {
 		worldPosition.setFromMatrixPosition(intersection[0].object.matrixWorld);
 		intersections.push({
-			object: intersection[0].object,
-			distance: ray.origin.distanceTo(worldPosition),
+		  object: intersection[0].object,
 		});
-		}
+	  }
 	}
-
-	intersections.sort((a, b) => a.distance - b.distance);
-
+  
 	return intersections;
-
-}
+  }
 
 function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
