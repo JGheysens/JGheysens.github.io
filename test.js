@@ -216,6 +216,8 @@ let plane1, plane2, plane3, plane4;
 let planeMaterials;
 let listener, audio, audioFile;
 let isplaying = false;
+let raycaster = new THREE.Raycaster();
+let intersectedObject = null;
 
 init();
 animate();
@@ -255,7 +257,7 @@ function init() {
 
 	camera.add(listener);
 
-	// Create an AnalyserNode
+	/* // Create an AnalyserNode
 	const analyser = new THREE.AudioAnalyser(audio, 32);
 
 	// Create a texture for the FFT visualization
@@ -265,7 +267,7 @@ function init() {
 
 	// Create a material using the texture
 	const fftMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-
+ */
 	// Create an array to store materials for both planes
 	planeMaterials = [
 		new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }), // Red material for plane1
@@ -275,7 +277,7 @@ function init() {
 	  ];
 	// Create the first plane and assign the FFT material
 	const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-	plane1 = new THREE.Mesh(geometry1, fftMaterial);
+	plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
 	plane1.position.set(-1, 0, -1);
 	plane1.rotateY(Math.PI / 4);
 	scene.add(plane1);
@@ -309,22 +311,27 @@ function init() {
 }
 
 function onSelect() {
-	// Change the color of each plane's material separately when selected
-	planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
-	planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
-	planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
-	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
-
-	// Pause and play the audio to trigger a restart
-	if (!isplaying){
+	// Use the raycaster to check which object the controller is pointing at
+	raycaster.set(controller.position, controller.getWorldDirection(new THREE.Vector3()));
+	const intersects = raycaster.intersectObjects([plane1, plane2, plane3, plane4]);
+  
+	if (intersects.length > 0) {
+	  // Controller is pointing at one of the planes
+	  const selectedPlane = intersects[0].object;
+  
+	  // Change the color of the selected plane's material
+	  selectedPlane.material.color.setRGB(Math.random(), Math.random(), Math.random());
+  
+	  // Pause and play the audio to trigger a restart
+	  if (!isplaying) {
 		audio.play();
 		isplaying = true;
-	}
-	else{
+	  } else {
 		audio.pause();
 		isplaying = false;
+	  }
 	}
-}
+  }
 
 function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
@@ -333,15 +340,16 @@ function onWindowResize() {
 }
 
 function animate() {
+	raycaster.update();
 	renderer.setAnimationLoop(render);
 }
 
 function render() {
-	analyser.getFrequencyData();
+	/* analyser.getFrequencyData();
 
     // Update the FFT texture with the new data
     texture.image.data.set(analyser.data);
     texture.needsUpdate = true;
-
+ */
   	renderer.render(scene, camera);
 }
