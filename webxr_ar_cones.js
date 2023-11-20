@@ -263,12 +263,13 @@ function init() {
     new THREE.MeshPhongMaterial({ color: 0xff0000 }), // Red material for plane1
     new THREE.MeshPhongMaterial({ color: 0x00ff00 }), // Green material for plane2
 	new THREE.MeshPhongMaterial({ color: 0x0000ff }),
-	new THREE.MeshPhongMaterial({ color: 0xffff00 })
+	new THREE.MeshPhongMaterial({ color: 0xffff00 }),
+	new THREE.MeshBasicMaterial({ color: 0xff00ff, side: THREE.DoubleSide })
   ];
 
   // Create the first plane and position it
   const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[4]);
   placeAndRotatePlane(plane1, -Math.PI / 2); // Rotate it to face the camera
   scene.add(plane1);
 
