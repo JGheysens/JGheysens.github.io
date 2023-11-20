@@ -213,6 +213,7 @@ let controller;
 let plane1, plane2, plane3, plane4; // New variables for the planes
 let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
+let isplaying = false;
 
 init();
 animate();
@@ -284,14 +285,14 @@ function init() {
   const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
   plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
   plane3.position.set(-1, 0, 1); // Move the third plane to the left
-  plane3.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
+  plane3.rotateY(-Math.PI / 4); // Rotate the plane -45 degrees
   scene.add(plane3);
 
   // Create the fourth plane and position it
   const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
   plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
   plane4.position.set(1, 0, 1); // Move the fourth plane to the right
-  plane4.rotateY( - Math.PI / 4); // Rotate the plane -45 degrees
+  plane4.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
   scene.add(plane4);
 
   controller = renderer.xr.getController(0);
@@ -309,7 +310,14 @@ function onSelect() {
   planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
 
   // Pause and play the audio to trigger a restart
-  audio.play();
+  if (!isplaying){
+	audio.play();
+	isplaying = true;
+  }
+  else{
+	audio.pause();
+	isplaying = false;
+  }
 }
 
 function onWindowResize() {
