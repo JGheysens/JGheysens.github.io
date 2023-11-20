@@ -216,7 +216,7 @@ let plane1, plane2, plane3, plane4;
 let planeMaterials;
 let listener, audio, audioFile;
 let isplaying = false;
-let raycaster = new THREE.Raycaster();
+let raycaster;
 let intersectedObject = null;
 
 init();
@@ -256,6 +256,8 @@ function init() {
 
 
 	camera.add(listener);
+
+	const raycaster = new THREE.Raycaster();
 
 	/* // Create an AnalyserNode
 	const analyser = new THREE.AudioAnalyser(audio, 32);
@@ -328,7 +330,7 @@ function onWindowResize() {
 }
 
 function animate() {
-	raycaster.update();
+	//raycaster.update();
 	renderer.setAnimationLoop(render);
 }
 
