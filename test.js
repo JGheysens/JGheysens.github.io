@@ -208,71 +208,65 @@ class ARButton {
 
 }
 
-let camera, scene, renderer;
-let controller;
-let plane1, plane2, plane3, plane4; // New variables for the planes
-let planeMaterials; // Array to store materials for both planes
-let listener, audio, audioFile;
-let isplaying = false;
 
-init();
-animate();
+    // import * as THREE from 'three';
+    import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-function init() {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
+    class ARButton {
+      // ... (unchanged)
+    }
 
-  scene = new THREE.Scene();
+    let camera, scene, renderer;
+    let controller;
+    let plane1, plane2, plane3, plane4;
+    let planeMaterials;
+    let listener, audio, audioFile;
+    let isplaying = false;
 
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+    init();
+    animate();
 
-  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
-  light.position.set(0.5, 1, 0.25);
-  scene.add(light);
+    function init() {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.xr.enabled = true;
-  container.appendChild(renderer.domElement);
+      scene = new THREE.Scene();
 
-  document.body.appendChild(ARButton.createButton(renderer));
+      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-  // Initialize Web Audio API
-  listener = new THREE.AudioListener();
+      // ... (unchanged)
 
-  // Create an Audio object and link it to the listener
-  audio = new THREE.Audio(listener);
+      // Initialize Web Audio API
+      listener = new THREE.AudioListener();
+      audio = new THREE.Audio(listener);
+      audioFile = './sounds/drums.mp3';
 
-  // Load an audio file
-  audioFile = './sounds/drums.mp3'; // Change to your audio file
+      const loader = new THREE.AudioLoader();
+      loader.load(audioFile, function (buffer) {
+        audio.setBuffer(buffer);
+        audio.setLoop(true);
+        audio.setVolume(0.5);
+      });
 
-  // Load audio using THREE.AudioLoader
-  const loader = new THREE.AudioLoader();
-  loader.load(audioFile, function (buffer) {
-    audio.setBuffer(buffer);
-    audio.setLoop(true); // Set to true if you want the audio to loop
-    audio.setVolume(0.5); // Adjust the volume if needed
-  });
+      camera.add(listener);
 
-  // Attach the listener to the camera
-  camera.add(listener);
+      // Create an AnalyserNode
+      const analyser = new THREE.AudioAnalyser(audio, 32);
 
+      // Create a texture for the FFT visualization
+      const texture = new THREE.DataTexture(analyser.data, analyser.data.length / 3, 1, THREE.LuminanceFormat);
+      texture.minFilter = THREE.NearestFilter;
+      texture.magFilter = THREE.NearestFilter;
 
-  // Create an array to store materials for both planes
-  planeMaterials = [
-    new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide }), // Red material for plane1
-    new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide }), // Green material for plane2
-	new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide }), // Blue material for plane3
-	new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide }), // Yellow material for plane4
-  ];
+      // Create a material using the texture
+      const fftMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 
-  // Create the first plane and position it
-  const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
-  plane1.position.set(-1, 0, -1); // Move the first plane to the left
-  plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
-  scene.add(plane1);
+      // Create the first plane and assign the FFT material
+      const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
+      plane1 = new THREE.Mesh(geometry1, fftMaterial);
+      plane1.position.set(-1, 0, -1);
+      plane1.rotateY(Math.PI / 4);
+      scene.add(plane1);
 
   // Create the second plane and position it
   const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
@@ -331,5 +325,11 @@ function animate() {
 }
 
 function render() {
+	analyser.getFrequencyData();
+
+      // Update the FFT texture with the new data
+      texture.image.data.set(analyser.data);
+      texture.needsUpdate = true;
+	  
   renderer.render(scene, camera);
 }
