@@ -319,8 +319,20 @@ function onSelect() {
 	// If there is an intersection, play the audio
 	if (intersections.length > 0) {
 		const intersectedObject = intersections[0].object;
+		if (intersectedObject == plane1){
+			planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
+		}
+		if (intersectedObject == plane2){
+			planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
+		}
+		if (intersectedObject == plane3){
+			planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
+		}
+		if (intersectedObject == plane4){
+			planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
+		}
+
 		if (intersectedObject === plane1 || intersectedObject === plane2 || intersectedObject === plane3 || intersectedObject === plane4) {
-			planeMaterials[planes.indexOf(intersectedObject)].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
 			if (!isplaying) {
 			audio.play();
 			isplaying = true;
