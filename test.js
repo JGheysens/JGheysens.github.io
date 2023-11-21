@@ -213,7 +213,9 @@ let controller;
 let plane1, plane2, plane3, plane4; // New variables for the planes
 let planes = [plane1, plane2, plane3, plane4]; // Array to store the planes
 let planeMaterials; // Array to store materials for both planes
-let listener, audio, audioFile;
+let listener;
+let audio1, audio2, audio3, audio4;
+let audioFile1, audioFile2, audioFile3, audioFile4;
 let isplaying = false;
 
 init();
@@ -331,81 +333,37 @@ function init() {
 }
 
 function onSelect() {
-	// Check if the controller intersects with any of the planes
 	const intersections = getIntersections(controller);
   
-	// If there is an intersection, change the color of the plane
 	if (intersections.length > 0) {
-		const intersectedObject = intersections[0].object;
-		if (intersectedObject == plane1){
-			planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
-			if (isplaying){
-				audio1.pause();
-				audio2.pause();
-				audio3.pause();
-				audio4.pause();
-				isplaying = false;
-			}
-			else{
-				audio1.play();
-				isplaying = true;
-			}
-			
-		}
-		if (intersectedObject == plane2){
-			planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
-			if (isplaying){
-				audio1.pause();
-				audio2.pause();
-				audio3.pause();
-				audio4.pause();
-				isplaying = false;
-			}
-			else{
-				audio2.play();
-				isplaying = true;
-			}
-		}
-		if (intersectedObject == plane3){
-			planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
-			if (isplaying){
-				audio1.pause();
-				audio2.pause();
-				audio3.pause();
-				audio4.pause();
-				isplaying = false;
-			}
-			else{
-				audio3.play();
-				isplaying = true;
-			}
-		}
-		if (intersectedObject == plane4){
-			planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
-			if (isplaying){
-				audio1.pause();
-				audio2.pause();
-				audio3.pause();
-				audio4.pause();
-				isplaying = false;
-			}
-			else{
-				audio4.play();
-				isplaying = true;
-			}
-		}
-		/* // Pause and play the audio to trigger a restart
-		if (intersectedObject === plane1 || intersectedObject === plane2 || intersectedObject === plane3 || intersectedObject === plane4) {
-			if (!isplaying) {
-			audio.play();
-			isplaying = true;
-		  } else {
-			audio.pause();
-			isplaying = false;
-		  } */
-	//}
+	  const intersectedObject = intersections[0].object;
+  
+	  // Pause and play the audio to trigger a restart
+	  if (intersectedObject == plane1) {
+		planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
+		toggleAudio(audio1);
+	  } else if (intersectedObject == plane2) {
+		planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
+		toggleAudio(audio2);
+	  } else if (intersectedObject == plane3) {
+		planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
+		toggleAudio(audio3);
+	  } else if (intersectedObject == plane4) {
+		planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
+		toggleAudio(audio4);
+	  }
+	}
   }
-}
+  
+  function toggleAudio(audio) {
+	if (isplaying) {
+	  audio.pause();
+	  isplaying = false;
+	} else {
+	  audio.play();
+	  isplaying = true;
+	}
+  }
   
   function getIntersections(controller) {
 	const tempMatrix = new THREE.Matrix4();
