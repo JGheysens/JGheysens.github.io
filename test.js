@@ -214,8 +214,6 @@ let plane1, plane2, plane3, plane4; // New variables for the planes
 let planes = [plane1, plane2, plane3, plane4];
 let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
-let audioFiles = ['./sounds/drums.mp3', './sounds/beat_music.mp3', './sounds/piano_music.mp3', './sounds/relax_music.mp3'];
-let audioObjects = [];
 let isplaying = false;
 
 init();
@@ -245,17 +243,18 @@ function init() {
   listener = new THREE.AudioListener();
 
   // Create an Audio object and link it to the listener
-  for (let i = 0; i < audioFiles.length; i++) {
-	const audioObject = new THREE.Audio(listener);
-	audioObjects.push(audioObject);
-  
-	const loader = new THREE.AudioLoader();
-	loader.load(audioFiles[i], function (buffer) {
-	  audioObject.setBuffer(buffer);
-	  audioObject.setLoop(true); // Set to true if you want the audio to loop
-	  audioObject.setVolume(0.5); // Adjust the volume if needed
-	});
-  }
+  audio = new THREE.Audio(listener);
+
+  // Load an audio file
+  audioFile = './sounds/drums.mp3'; // Change to your audio file
+
+  // Load audio using THREE.AudioLoader
+  const loader = new THREE.AudioLoader();
+  loader.load(audioFile, function (buffer) {
+    audio.setBuffer(buffer);
+    audio.setLoop(true); // Set to true if you want the audio to loop
+    audio.setVolume(0.5); // Adjust the volume if needed
+  });
 
   // Attach the listener to the camera
   camera.add(listener);
@@ -319,18 +318,16 @@ function onSelect() {
   
 	// If there is an intersection, play the audio
 	if (intersections.length > 0) {
-		const selectedPlaneIndex = planes.indexOf(intersections[0].object);
-		planeMaterials[selectedPlaneIndex].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for the selected plane
-		const selectedAudio = audioObjects[selectedPlaneIndex];
-	
+		const selectedPlaneIndex=planes.indexOf(intersected_planes[0]);
+		planeMaterials[selectedPlaneIndex].color.setRGB(Math.random(), Math.random(), Math.random());
 		if (!isplaying) {
-		  selectedAudio.play();
-		  isplaying = true;
-		} else {
-		  selectedAudio.pause();
-		  isplaying = false;
-		}
-	  }
+			audio.play();
+			isplaying = true;
+		  } else {
+			audio.pause();
+			isplaying = false;
+		  }
+	}
   }
   
   function getIntersections(controller) {
@@ -348,7 +345,7 @@ function onSelect() {
 	for (const plane of planes) {
 	  const intersection = raycaster.intersectObject(plane);
 	  if (intersection.length > 0) {
-		intersections.push(intersection[0]);
+		intersected_planes.push(plane);
 	  }
 	}
   
