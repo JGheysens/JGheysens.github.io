@@ -211,7 +211,6 @@ class ARButton {
 let camera, scene, renderer;
 let controller;
 let plane1, plane2, plane3, plane4; // New variables for the planes
-let planes = [plane1, plane2, plane3, plane4];
 let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
 let isplaying = false;
@@ -305,10 +304,10 @@ function init() {
 
 function onSelect() {
 	// Change the color of each plane's material separately when selected
-	/* planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
+	planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
 	planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
 	planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
-	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4 */
+	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
   
 	// Pause and play the audio to trigger a restart
 	
@@ -318,9 +317,9 @@ function onSelect() {
   
 	// If there is an intersection, play the audio
 	if (intersections.length > 0) {
-		const selectedPlaneIndex=planes.indexOf(intersected_planes[0]);
-		planeMaterials[selectedPlaneIndex].color.setRGB(Math.random(), Math.random(), Math.random());
-		if (!isplaying) {
+		const intersectedObject = intersections[0].object;
+		if (intersectedObject === plane1 || intersectedObject === plane2 || intersectedObject === plane3 || intersectedObject === plane4) {
+		  if (!isplaying) {
 			audio.play();
 			isplaying = true;
 		  } else {
@@ -329,6 +328,7 @@ function onSelect() {
 		  }
 	}
   }
+}
   
   function getIntersections(controller) {
 	const tempMatrix = new THREE.Matrix4();
@@ -345,7 +345,7 @@ function onSelect() {
 	for (const plane of planes) {
 	  const intersection = raycaster.intersectObject(plane);
 	  if (intersection.length > 0) {
-		intersected_planes.push(plane);
+		intersections.push(intersection[0]);
 	  }
 	}
   
