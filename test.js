@@ -306,10 +306,10 @@ function init() {
 
 function onSelect() {
 	// Change the color of each plane's material separately when selected
-	planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
+	/* planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
 	planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
 	planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
-	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4
+	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4 */
   
 	// Pause and play the audio to trigger a restart
 	
@@ -320,6 +320,7 @@ function onSelect() {
 	// If there is an intersection, play the audio
 	if (intersections.length > 0) {
 		const selectedPlaneIndex = planes.indexOf(intersections[0].object);
+		planeMaterials[selectedPlaneIndex].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for the selected plane
 		const selectedAudio = audioObjects[selectedPlaneIndex];
 	
 		if (!isplaying) {
