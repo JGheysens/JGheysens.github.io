@@ -304,19 +304,10 @@ function init() {
 }
 
 function onSelect() {
-	// Change the color of each plane's material separately when selected
-	/* planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
-	planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane2
-	planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane3
-	planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane4 */
-  
-	// Pause and play the audio to trigger a restart
-	
-  
 	// Check if the controller intersects with any of the planes
 	const intersections = getIntersections(controller);
   
-	// If there is an intersection, play the audio
+	// If there is an intersection, change the color of the plane
 	if (intersections.length > 0) {
 		const intersectedObject = intersections[0].object;
 		if (intersectedObject == plane1){
@@ -331,7 +322,7 @@ function onSelect() {
 		if (intersectedObject == plane4){
 			planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
 		}
-
+		// Pause and play the audio to trigger a restart
 		if (intersectedObject === plane1 || intersectedObject === plane2 || intersectedObject === plane3 || intersectedObject === plane4) {
 			if (!isplaying) {
 			audio.play();
