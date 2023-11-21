@@ -211,6 +211,7 @@ class ARButton {
 let camera, scene, renderer;
 let controller;
 let plane1, plane2, plane3, plane4; // New variables for the planes
+let planes = [plane1, plane2, plane3, plane4]; // Array to store the planes
 let planeMaterials; // Array to store materials for both planes
 let listener, audio, audioFile;
 let isplaying = false;
@@ -319,7 +320,8 @@ function onSelect() {
 	if (intersections.length > 0) {
 		const intersectedObject = intersections[0].object;
 		if (intersectedObject === plane1 || intersectedObject === plane2 || intersectedObject === plane3 || intersectedObject === plane4) {
-		  if (!isplaying) {
+			planeMaterials[planes.indexOf(intersectedObject)].color.setRGB(Math.random(), Math.random(), Math.random()); // Random color for plane1
+			if (!isplaying) {
 			audio.play();
 			isplaying = true;
 		  } else {
