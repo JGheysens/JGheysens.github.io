@@ -243,18 +243,45 @@ function init() {
   listener = new THREE.AudioListener();
 
   // Create an Audio object and link it to the listener
-  audio = new THREE.Audio(listener);
+  audio1 = new THREE.Audio(listener);
+  audio2 = new THREE.Audio(listener);
+  audio3 = new THREE.Audio(listener);
+  audio4 = new THREE.Audio(listener);
 
   // Load an audio file
-  audioFile = './sounds/drums.mp3'; // Change to your audio file
+  audioFile1 = './sounds/drums.mp3'; // Change to your audio file
+  audioFile2 = './sounds/beat_music.mp3'; // Change to your audio file
+  audioFile3 = './sounds/piano_music.mp3'; // Change to your audio file
+  audioFile4 = './sounds/relax_music.mp3'; // Change to your audio file
 
   // Load audio using THREE.AudioLoader
-  const loader = new THREE.AudioLoader();
-  loader.load(audioFile, function (buffer) {
-    audio.setBuffer(buffer);
-    audio.setLoop(true); // Set to true if you want the audio to loop
-    audio.setVolume(0.5); // Adjust the volume if needed
+  const loader1 = new THREE.AudioLoader();
+  loader1.load(audioFile1, function (buffer) {
+    audio1.setBuffer(buffer);
+    audio1.setLoop(true); // Set to true if you want the audio to loop
+    audio1.setVolume(0.5); // Adjust the volume if needed
   });
+  const loader2 = new THREE.AudioLoader();
+  loader2.load(audioFile2, function (buffer) {
+	audio2.setBuffer(buffer);
+	audio2.setLoop(true); // Set to true if you want the audio to loop
+	audio2.setVolume(0.5); // Adjust the volume if needed
+  }
+  );
+  const loader3 = new THREE.AudioLoader();
+  loader3.load(audioFile3, function (buffer) {
+	audio3.setBuffer(buffer);
+	audio3.setLoop(true); // Set to true if you want the audio to loop
+	audio3.setVolume(0.5); // Adjust the volume if needed
+  }
+  );
+  const loader4 = new THREE.AudioLoader();
+  loader4.load(audioFile4, function (buffer) {
+	audio4.setBuffer(buffer);
+	audio4.setLoop(true); // Set to true if you want the audio to loop
+	audio4.setVolume(0.5); // Adjust the volume if needed
+  }
+  );
 
   // Attach the listener to the camera
   camera.add(listener);
@@ -312,17 +339,62 @@ function onSelect() {
 		const intersectedObject = intersections[0].object;
 		if (intersectedObject == plane1){
 			planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
+			if (isplaying){
+				audio1.pause();
+				audio2.pause();
+				audio3.pause();
+				audio4.pause();
+				isplaying = false;
+			}
+			else{
+				audio1.play();
+				isplaying = true;
+			}
+			
 		}
 		if (intersectedObject == plane2){
 			planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
+			if (isplaying){
+				audio1.pause();
+				audio2.pause();
+				audio3.pause();
+				audio4.pause();
+				isplaying = false;
+			}
+			else{
+				audio2.play();
+				isplaying = true;
+			}
 		}
 		if (intersectedObject == plane3){
 			planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
+			if (isplaying){
+				audio1.pause();
+				audio2.pause();
+				audio3.pause();
+				audio4.pause();
+				isplaying = false;
+			}
+			else{
+				audio3.play();
+				isplaying = true;
+			}
 		}
 		if (intersectedObject == plane4){
 			planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
+			if (isplaying){
+				audio1.pause();
+				audio2.pause();
+				audio3.pause();
+				audio4.pause();
+				isplaying = false;
+			}
+			else{
+				audio4.play();
+				isplaying = true;
+			}
 		}
-		// Pause and play the audio to trigger a restart
+		/* // Pause and play the audio to trigger a restart
 		if (intersectedObject === plane1 || intersectedObject === plane2 || intersectedObject === plane3 || intersectedObject === plane4) {
 			if (!isplaying) {
 			audio.play();
@@ -330,8 +402,8 @@ function onSelect() {
 		  } else {
 			audio.pause();
 			isplaying = false;
-		  }
-	}
+		  } */
+	//}
   }
 }
   
