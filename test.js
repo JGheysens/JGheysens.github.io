@@ -241,9 +241,6 @@ function init() {
 
   document.body.appendChild(ARButton.createButton(renderer));
 
-  const fftSize = 256; // Adjust the size based on your requirements
-  const fftData = new Uint8Array(fftSize);
-
   // Initialize Web Audio API
   listener = new THREE.AudioListener();
 
@@ -356,7 +353,6 @@ function onSelect() {
 		toggleAudio(audio4);
 	  }
 	}
-	updateFFT();
   }
   
   function toggleAudio(audio) {
@@ -391,29 +387,7 @@ function onSelect() {
 	return intersections;
   }
   
-function updateFFT() {
-	// Get the audio data
-	const dataArray = new Uint8Array(analyser.fftSize);
-	analyser.getByteFrequencyData(dataArray);
-  
-	// Update the FFT data array
-	for (let i = 0; i < fftSize; i++) {
-	  fftData[i] = dataArray[i];
-	}
-  
-	// Update the visualization based on the FFT data
-	updateFFTVisualization();
-  }
 
-function updateFFTVisualization() {
-	// Your visualization update logic here
-	// For example, you might update the color or height of a geometry based on the FFT data
-	const intensity = fftData[0] / 255; // Scale the FFT data if needed
-  
-	  // Update your visualization based on intensity
-	  // For example, you might update the color or height of a plane
-	planes[0].material.color.setRGB(intensity, intensity, intensity);
-  }
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
