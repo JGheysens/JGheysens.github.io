@@ -66,6 +66,7 @@ function init() {
 
         const mediaElement = new Audio( file );
         mediaElement.play();
+        mediaElement.loop = true;
 
         audio.setMediaElementSource( mediaElement );
 
