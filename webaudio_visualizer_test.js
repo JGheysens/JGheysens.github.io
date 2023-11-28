@@ -28,6 +28,7 @@ const fragmentShaderCode = `
 `;
 
 let scene, camera, renderer, analyser, uniforms;
+init();
 
 function init() {
 
