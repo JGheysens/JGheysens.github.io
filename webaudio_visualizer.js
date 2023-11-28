@@ -39,12 +39,18 @@ function init() {
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.xr.enabled = true;
     container.appendChild( renderer.domElement );
 
     scene = new THREE.Scene();
 
-    camera = new THREE.Camera();
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
+    const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
+    light.position.set(0.5, 1, 0.25);
+    scene.add(light);
+
+    document.body.appendChild(ARButton.createButton(renderer));
 
     const listener = new THREE.AudioListener();
 
@@ -72,6 +78,8 @@ function init() {
 
     }
 
+    camera.add( listener );
+
     analyser = new THREE.AudioAnalyser( audio, fftSize );
 
     //
@@ -95,9 +103,14 @@ function init() {
     const geometry = new THREE.PlaneGeometry( 1, 1 );
 
     const mesh = new THREE.Mesh( geometry, material );
+    mesh.position.set(-1, 0, -1); // Move the first plane to the left
+    mesh.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
     scene.add( mesh );
 
     //
+    controller = renderer.xr.getController(0);
+    controller.addEventListener('select', onSelect);
+    scene.add(controller);
 
     window.addEventListener( 'resize', onWindowResize );
 
@@ -105,7 +118,54 @@ function init() {
 
 }
 
+function onSelect() {
+	const intersections = getIntersections(controller);
+  
+	if (intersections.length > 0) {
+	  const intersectedObject = intersections[0].object;
+  
+	  // Pause and play the audio to trigger a restart
+	  if (intersectedObject == plane1) {
+		toggleAudio(audio1);
+	  }
+    }
+  }
+
+function toggleAudio(audio) {
+if (isplaying) {
+    audio.pause();
+    isplaying = false;
+} else {
+    audio.play();
+    isplaying = true;
+}
+}
+
+function getIntersections(controller) {
+	const tempMatrix = new THREE.Matrix4();
+	const raycaster = new THREE.Raycaster();
+	const intersections = [];
+  
+	// Update the raycaster with the controller's position and direction
+	const controllerMatrix = controller.matrixWorld;
+	raycaster.ray.origin.setFromMatrixPosition(controllerMatrix);
+	raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix.identity().extractRotation(controllerMatrix));
+  
+	// Check for intersections with each plane
+	const planes = [plane1, plane2, plane3, plane4];
+	for (const plane of planes) {
+	  const intersection = raycaster.intersectObject(plane);
+	  if (intersection.length > 0) {
+		intersections.push(intersection[0]);
+	  }
+	}
+  
+	return intersections;
+  }
+
 function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
 
