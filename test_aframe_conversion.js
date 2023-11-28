@@ -64,6 +64,7 @@ if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 
     const mediaElement = new Audio( file );
     mediaElement.play();
+    mediaElement.loop = true;
 
     audio.setMediaElementSource( mediaElement );
 
