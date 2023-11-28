@@ -68,6 +68,7 @@ function createAudioObject(file, loop = true, volume = 0.5) {
 }
 
 function animate() {
+    requestAnimationFrame(animate);
   const dataArray = analyser.getFrequencyData();
 
   for (let i = 0; i < numCubes; i++) {
