@@ -31,23 +31,11 @@ for (let i = 0; i < numCubes; i++) {
   cubes.push(cube);
 }
 
+camera.position.z = 5;
+
 // Create an AudioListener
 const listener = new THREE.AudioListener();
 
-// Function to create an audio object, load an audio file, and set properties
-function createAudioObject(file, loop = true, volume = 0.5) {
-  const audio = new THREE.Audio(listener);
-  const loader = new THREE.AudioLoader();
-
-  loader.load(file, function (buffer) {
-    audio.setBuffer(buffer);
-    audio.setLoop(loop);
-    audio.setVolume(volume);
-    audio.play(); // Start playing the audio immediately
-  });
-
-  return audio;
-}
 
 // Audio files
 const audioFiles = [
@@ -74,6 +62,20 @@ camera.position.z = 5;
 const analyser = new THREE.AudioAnalyser(audio1, 256); // Adjust fftSize based on your needs
 
 }
+
+function createAudioObject(file, loop = true, volume = 0.5) {
+    const audio = new THREE.Audio(listener);
+    const loader = new THREE.AudioLoader();
+  
+    loader.load(file, function (buffer) {
+      audio.setBuffer(buffer);
+      audio.setLoop(loop);
+      audio.setVolume(volume);
+      audio.play(); // Start playing the audio immediately
+    });
+  
+    return audio;
+  }
 
 function animate() {
   // Get frequency data
