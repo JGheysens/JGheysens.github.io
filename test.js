@@ -291,7 +291,7 @@ function init() {
   // Create a new AudioAnalyser object
   const analyser = new THREE.AudioAnalyser(audio1, 32);
   analyser.analyser.fftSize = 128;
-  const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
+  const format = THREE.LuminanceFormat;
 
 	uniforms = {
 
