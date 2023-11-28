@@ -291,9 +291,21 @@ function init() {
   // Create a new AudioAnalyser object
   const analyser = new THREE.AudioAnalyser(audio1, 32);
   analyser.analyser.fftSize = 128;
-  const data = analyser.data;
-  const value = new THREE.DataTexture(data, fftSize/2, 11, THREE.LuminanceFormat);
+  const format = ( renderer.capabilities.isWebGL2 ) ? THREE.RedFormat : THREE.LuminanceFormat;
 
+	uniforms = {
+
+		tAudioData: { value: new THREE.DataTexture( analyser.data, fftSize / 2, 1, format ) }
+
+	};
+
+	const material1 = new THREE.ShaderMaterial( {
+
+		uniforms: uniforms,
+		vertexShader: document.getElementById( 'vertexShader' ).textContent,
+		fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+	} );
 
 
   // Create an array to store materials for both planes
@@ -303,11 +315,10 @@ function init() {
 	new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide }), // Blue material for plane3
 	new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide }), // Yellow material for plane4
   ];
-  planeMaterials[0].map = new THREE.DataTexture(value);
 
   // Create the first plane and position it
-  const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
-  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
+  const geometry1 = new THREE.PlaneGeometry(1, 1);
+  plane1 = new THREE.Mesh(geometry1, material1);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
   plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
   scene.add(plane1);
