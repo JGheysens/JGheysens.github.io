@@ -57,6 +57,7 @@ function init() {
         loader.load( file, function ( buffer ) {
 
             audio.setBuffer( buffer );
+            audio.setLoop( true );
             audio.play();
 
         } );
