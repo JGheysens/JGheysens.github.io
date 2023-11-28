@@ -29,6 +29,7 @@ const fragmentShaderCode = `
 
 let scene, camera, renderer, analyser, uniforms;
 init();
+animate();
 
 function init() {
 
@@ -96,8 +97,6 @@ function init() {
     //
 
     window.addEventListener( 'resize', onWindowResize );
-
-    animate();
 
 }
 
