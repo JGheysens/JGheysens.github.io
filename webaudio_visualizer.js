@@ -28,8 +28,9 @@ const fragmentShaderCode = `
 `;
 
 let scene, camera, renderer, analyser, uniforms;
-init();
-animate();
+
+const startButton = document.getElementById( 'startButton' );
+startButton.addEventListener( 'click', init );
 
 function init() {
 
@@ -97,6 +98,8 @@ function init() {
     //
 
     window.addEventListener( 'resize', onWindowResize );
+
+    animate();
 
 }
 
