@@ -288,6 +288,12 @@ function init() {
   // Attach the listener to the camera
   camera.add(listener);
 
+  // Create a new AudioAnalyser object
+  const analyser = new THREE.AudioAnalyser(audio1, 32);
+  analyser.analyser.fftSize = 128;
+  const data = analyser.getFrequencyData();
+
+
 
   // Create an array to store materials for both planes
   planeMaterials = [
@@ -302,6 +308,7 @@ function init() {
   plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
   plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
+  plane1.color.setRGB(data[0], data[1], data[2]);
   scene.add(plane1);
 
   // Create the second plane and position it
@@ -399,5 +406,8 @@ function animate() {
 }
 
 function render() {
+	analyser.getFrequencyData();
+
+	uniforms.tAudioData.value.needsUpdate = true;
   renderer.render(scene, camera);
 }
