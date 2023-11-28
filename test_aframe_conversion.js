@@ -1,7 +1,7 @@
 // import * as THREE from 'three';
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-let camera, scene, renderer;
+let camera, scene, renderer, analyser, numCubes, cubes;
 
 init();
 animate();
