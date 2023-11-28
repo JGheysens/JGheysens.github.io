@@ -208,6 +208,33 @@ class ARButton {
 
 }
 
+// Define the vertex shader code as a string
+const vertexShaderCode = `
+    varying vec2 vUv;
+
+    void main() {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
+    }
+`;
+
+// Define the fragment shader code as a string
+const fragmentShaderCode = `
+    uniform sampler2D tAudioData;
+    varying vec2 vUv;
+
+    void main() {
+        vec3 backgroundColor = vec3(0.125, 0.125, 0.125);
+        vec3 color = vec3(1.0, 1.0, 0.0);
+
+        float f = texture2D(tAudioData, vec2(vUv.x, 0.0)).r;
+
+        float i = step(vUv.y, f) * step(f - 0.0125, vUv.y);
+
+        gl_FragColor = vec4(mix(backgroundColor, color, i), 1.0);
+    }
+`;
+
 let camera, scene, renderer;
 let controller;
 let plane1, plane2, plane3, plane4; // New variables for the planes
@@ -294,8 +321,8 @@ function init() {
 	uniforms: {
 		tAudioData: { value: new THREE.DataTexture(analyser.data, fftSize / 2, 1, THREE.LuminanceFormat) }
 	},
-	vertexShader: document.getElementById('vertexShader').textContent,
-	fragmentShader: document.getElementById('fragmentShader').textContent
+	vertexShader: vertexShaderCode,
+	fragmentShader: fragmentShaderCode
 });
 
 
@@ -350,7 +377,6 @@ function onSelect() {
   
 	  // Pause and play the audio to trigger a restart
 	  if (intersectedObject == plane1) {
-		planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
 		toggleAudio(audio1);
 	  } else if (intersectedObject == plane2) {
 		planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
