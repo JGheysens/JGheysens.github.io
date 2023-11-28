@@ -312,6 +312,8 @@ function init() {
   }
   );
 
+  audio1.play(); // Play the audio
+  
   // Attach the listener to the camera
   camera.add(listener);
 
