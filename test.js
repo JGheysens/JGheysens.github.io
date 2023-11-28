@@ -308,7 +308,7 @@ function init() {
   plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
   plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
-  plane1.color.setRGB(data[0], data[1], data[2]);
+  planeMaterials[0].map = new THREE.DataTexture(data, 16, 16, THREE.LuminanceFormat);
   scene.add(plane1);
 
   // Create the second plane and position it
