@@ -25,12 +25,11 @@ function init() {
 
   for (let i = 0; i < numCubes; i++) {
     const cube = new THREE.Mesh(geometry, material);
-    cube.position.x = i * 1.2;
+    cube.position.set(i*1.2,0,0);
     scene.add(cube);
     cubes.push(cube);
   }
 
-  camera.position.z = 5;
 
 
   camera.add(listener);
