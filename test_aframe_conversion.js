@@ -23,7 +23,7 @@ function init() {
   cubes = [];
   numCubes = 128;
 
-  for (let i = 0; i < numCubes; i++) {
+  for (let i = 0; i < 1; i++) {
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(i*1.2,0,0);
     scene.add(cube);
@@ -74,7 +74,7 @@ function animate() {
     requestAnimationFrame(animate);
   const dataArray = analyser.getFrequencyData();
 
-  for (let i = 0; i < numCubes; i++) {
+  for (let i = 0; i < 1; i++) {
     const scaleValue = dataArray[i];
     cubes[i].scale.y = Math.max(0.1, scaleValue * 5);
     cubes[i].material.color.setHSL(scaleValue, 1, 0.5);
