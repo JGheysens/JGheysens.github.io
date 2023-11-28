@@ -76,7 +76,7 @@ function animate() {
   const dataArray = analyser.getFrequencyData();
 
   for (let i = 0; i < numCubes; i++) {
-    const scaleValue = dataArray[i] / 255;
+    const scaleValue = dataArray[i];
     cubes[i].scale.y = Math.max(0.1, scaleValue * 5);
     cubes[i].material.color.setHSL(scaleValue, 1, 0.5);
   }
