@@ -313,6 +313,12 @@ function init() {
     mesh.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
     scene.add( mesh );
 
+    materialPlane = new THREE.MeshBasicMaterial( {color: 0x00ff00, side: THREE.DoubleSide} );
+    plane1 = new THREE.Mesh( geometry, materialPlane );
+    plane1.position.set(0, 0, 1); // Move the first plane to the left
+    plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
+    scene.add( plane1 );
+
     //
     controller = renderer.xr.getController(0);
     controller.addEventListener('select', onSelect);
