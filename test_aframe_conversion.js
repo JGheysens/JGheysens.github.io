@@ -32,16 +32,14 @@ function init() {
   camera.position.z = 5;
 
   const listener = new THREE.AudioListener();
-  const audioFiles = [
-    './sounds/drums.mp3',
-    './sounds/beat_music.mp3',
-    './sounds/piano_music.mp3',
-    './sounds/relax_music.mp3'
-  ];
-
-  const audioObjects = audioFiles.map(file => createAudioObject(file));
-
-  const [audio1, audio2, audio3, audio4] = audioObjects;
+  const audio = new THREE.Audio(listener);
+  const loader = new THREE.AudioLoader();
+  loader.load('./sounds/drums.mp3', function (buffer) {
+    audio.setBuffer(buffer);
+    audio.setLoop(true);
+    audio.setVolume(0.5);
+  });
+  audio.play();
 
   camera.add(listener);
   scene.add(camera);
@@ -53,19 +51,7 @@ function init() {
   animate();
 }
 
-function createAudioObject(file, loop = true, volume = 0.5) {
-  const audio = new THREE.Audio(listener);
-  const loader = new THREE.AudioLoader();
 
-  loader.load(file, function (buffer) {
-    audio.setBuffer(buffer);
-    audio.setLoop(loop);
-    audio.setVolume(volume);
-    audio.play(); // Consider starting the audio based on user interaction
-  });
-
-  return audio;
-}
 
 function animate() {
     requestAnimationFrame(animate);
