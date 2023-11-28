@@ -3,11 +3,8 @@ import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/thr
 
 let scene, camera, renderer, analyser, numCubes, cubes;
 
-init();
-renderer.setAnimationLoop(() => {
-  animate();
-  render();
-});
+const startButton = document.getElementById('startButton');
+startButton.addEventListener('click', init);
 
 function init() {
   const container = document.createElement('div');
@@ -52,6 +49,8 @@ function init() {
   camera.position.z = 5;
 
   analyser = new THREE.AudioAnalyser(audio1, 256);
+
+  animate();
 }
 
 function createAudioObject(file, loop = true, volume = 0.5) {
@@ -76,6 +75,7 @@ function animate() {
     cubes[i].scale.y = Math.max(0.1, scaleValue * 5);
     cubes[i].material.color.setHSL(scaleValue, 1, 0.5);
   }
+  render();
 }
 
 function render() {
