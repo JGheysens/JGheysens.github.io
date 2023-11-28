@@ -8,8 +8,8 @@ startButton.addEventListener('click', init);
 
 function init() {
     const container = document.getElementById('container');
-            const playAudioButton = document.getElementById('playAudioButton');
-            playAudioButton.addEventListener('click', playAudio);
+    const playAudioButton = document.getElementById('playAudioButton');
+    playAudioButton.addEventListener('click', playAudio);
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -32,15 +32,6 @@ function init() {
 
   camera.position.z = 5;
 
-  const listener = new THREE.AudioListener();
-  const audio = new THREE.Audio(listener);
-  const loader = new THREE.AudioLoader();
-  loader.load('./sounds/drums.mp3', function (buffer) {
-    audio.setBuffer(buffer);
-    audio.setLoop(true);
-    audio.setVolume(0.5);
-  });
-  audio.play();
 
   camera.add(listener);
   scene.add(camera);
@@ -64,6 +55,7 @@ if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
     loader.load( file, function ( buffer ) {
 
         audio.setBuffer( buffer );
+        audio.setLoop(true);
         audio.play();
 
     } );
