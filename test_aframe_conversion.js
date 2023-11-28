@@ -61,7 +61,7 @@ function createAudioObject(file, loop = true, volume = 0.5) {
     audio.setBuffer(buffer);
     audio.setLoop(loop);
     audio.setVolume(volume);
-    // audio.play(); // Consider starting the audio based on user interaction
+    audio.play(); // Consider starting the audio based on user interaction
   });
 
   return audio;
