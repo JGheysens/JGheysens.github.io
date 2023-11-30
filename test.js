@@ -411,6 +411,7 @@ function animate() {
 
 function render() {
 	analyzers.forEach((analyzer, index) => {
+		if (!isplaying) return;
 		const dataArray = analyzer.getFrequencyData();
 	
 		// Calculate the average frequency to determine color
