@@ -423,8 +423,8 @@ function render() {
 		// Calculate the average volume to determine scale
 		const averageVolume = dataArray.reduce((acc, value) => acc + value, 0) / dataArray.length;
 
-		// Update plane scale based on volume
-		planes[index].scale.set(1, 1, 1).multiplyScalar(1 + averageVolume / 255);
+		// Update plane position based on volume
+		planes[index].position.z.multiplyScalar(1 + averageVolume / 255);
 	  });
 
   renderer.render(scene, camera);
