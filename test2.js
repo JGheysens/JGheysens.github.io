@@ -12,7 +12,11 @@ let screenSize;
 
 // Assuming you have loaded Three.js library
 
-// Set up the scene, camera, and renderer
+
+// Set up the initial scene
+function init() {
+
+    // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
@@ -40,9 +44,11 @@ audioLoader.load('./drums.mp3', function(buffer) {
   song.play();
 });
 
-// Set up the initial scene
-function init() {
   camera.position.z = 5;
+
+  window.addEventListener('resize', onWindowResize);
+
+  animate();
 }
 
 // Handle window resizing
@@ -70,8 +76,6 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-// Event listeners
-window.addEventListener('resize', onWindowResize);
 
 // Run the setup functions
 init();
