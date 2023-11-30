@@ -49,38 +49,38 @@ function init() {
     };
     }
     // Set up the scene, camera, and renderer
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-// Create geometry and material
-const geometry = new THREE.SphereGeometry(1, 32, 32);
-const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+    // Create geometry and material
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
 
-// Create mesh
-const sphere = new THREE.Mesh(geometry, material);
-scene.add(sphere);
+    // Create mesh
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
 
-// Load the audio
-const listener = new THREE.AudioListener();
-camera.add(listener);
-song = new THREE.Audio(listener);
+    // Load the audio
+    const listener = new THREE.AudioListener();
+    camera.add(listener);
+    song = new THREE.Audio(listener);
 
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load('./drums.mp3', function(buffer) {
-  song.setBuffer(buffer);
-  song.setLoop(true);
-  song.setVolume(1);
-  song.play();
-});
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load('./drums.mp3', function(buffer) {
+    song.setBuffer(buffer);
+    song.setLoop(true);
+    song.setVolume(1);
+    song.play();
+    });
 
-  camera.position.z = 5;
+    camera.position.z = 5;
 
-  window.addEventListener('resize', onWindowResize);
+    window.addEventListener('resize', onWindowResize);
 
-  animate();
+    animate();
 }
 
 // Handle window resizing
