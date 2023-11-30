@@ -419,8 +419,15 @@ function render() {
 	
 		// Update plane color
 		planeMaterials[index].color = color;
+
+		const volume = analyzer.getAverageFrequency() / 255;
+    	const maxRotationAngle = Math.PI / 2; // Adjust the maximum rotation angle as needed
+    	const rotationAngle = maxRotationAngle * volume;
+
+    	// Update plane rotation based on volume
+    	planes[index].rotation.set(0, rotationAngle, 0);
 	
-	  });
+	});
 
   renderer.render(scene, camera);
 }
