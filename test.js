@@ -350,16 +350,16 @@ function onSelect() {
   
 	  // Pause and play the audio to trigger a restart
 	  if (intersectedObject == plane1) {
-		planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
+		//planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
 		toggleAudio(audio1);
 	  } else if (intersectedObject == plane2) {
-		planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
+		//planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
 		toggleAudio(audio2);
 	  } else if (intersectedObject == plane3) {
-		planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
+		//planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
 		toggleAudio(audio3);
 	  } else if (intersectedObject == plane4) {
-		planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
+		//planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
 		toggleAudio(audio4);
 	  }
 	}
