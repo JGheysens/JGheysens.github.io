@@ -320,7 +320,7 @@ function init() {
   scene.add(plane3);
 
   // Create the fourth plane and position it
-  const geometry4 = new THREE.PlaneGeometry(0.5, 0.5);
+  const geometry4 = new THREE.CubeGeometry(0.5, 0.5, 0.5);
   plane4 = new THREE.Mesh(geometry4, planeMaterials[3]);
   plane4.position.set(1, 0, 1); // Move the fourth plane to the right
   plane4.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
@@ -420,8 +420,6 @@ function render() {
 		// Update plane color
 		planeMaterials[index].color = color;
 
-		const volume = analyzer.getAverageFrequency() / 255;
-    	planes[index].scale.y = volume;
 	
 	});
 
