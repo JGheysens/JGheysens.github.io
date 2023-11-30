@@ -85,7 +85,7 @@ if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 
 };
 }
-d
+
 // Handle window resizing
 function onWindowResize() {
 /*   camera.aspect = window.innerWidth / window.innerHeight;
