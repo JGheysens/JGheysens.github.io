@@ -306,14 +306,14 @@ function init() {
   scene.add(plane1);
 
   // Create the second plane and position it
-  const geometry2 = new THREE.PlaneGeometry(0.5, 0.5);
+  const geometry2 = new THREE.CapsuleGeometry( 0.5, 0.5, 4, 8 );
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
   plane2.position.set(1, 0, -1); // Move the second plane to the right
   plane2.rotateY( - Math.PI / 4); // Rotate the plane -45 degrees
   scene.add(plane2);
 
   // Create the third plane and position it
-  const geometry3 = new THREE.PlaneGeometry(0.5, 0.5);
+  const geometry3 = new THREE.DodecahedronGeometry(0.5, 1);
   plane3 = new THREE.Mesh(geometry3, planeMaterials[2]);
   plane3.position.set(-1, 0, 1); // Move the third plane to the left
   plane3.rotateY(-Math.PI / 4); // Rotate the plane -45 degrees
