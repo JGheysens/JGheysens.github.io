@@ -47,10 +47,15 @@ function init() {
 
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load('./drums.mp3', function(buffer) {
-    song.setBuffer(buffer);
-    song.setLoop(true);
-    song.setVolume(1);
-    song.play();
+        song.setBuffer(buffer);
+        song.setLoop(true);
+        song.setVolume(1);
+        song.play();
+        // Set the buffer on the audio element as well
+        audio.setBuffer(buffer);
+        
+        // Update the screenSize after loading the audio
+        screenSize = window.innerWidth - 2 * border;
     });
 
     camera.position.z = 5;
@@ -63,49 +68,51 @@ function init() {
 function playAudio() {
     const listener = new THREE.AudioListener();
 
-const audio = new THREE.Audio( listener );
-const file = './sounds/drums.mp3';
+    const audio = new THREE.Audio(listener);
+    const file = './sounds/drums.mp3';
 
-if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
 
-    const loader = new THREE.AudioLoader();
-    loader.load( file, function ( buffer ) {
+        const loader = new THREE.AudioLoader();
+        loader.load(file, function (buffer) {
 
-        audio.setBuffer( buffer );
-        audio.play();
+            audio.setBuffer(buffer);
+            audio.play();
 
-    } );
+        });
 
-} else {
+    } else {
 
-    const mediaElement = new Audio( file );
-    mediaElement.play();
-    audio.setMediaElementSource( mediaElement );
+        const mediaElement = new Audio(file);
+        mediaElement.play();
+        audio.setMediaElementSource(mediaElement);
 
-};
+    }
 }
 
 // Handle window resizing
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 // Main animation loop
 function animate() {
-  requestAnimationFrame(animate);
-  
-  // Update logic here
-  let x = THREE.map(song.context.currentTime, 0, song.buffer.duration, 0, screenSize);
+    requestAnimationFrame(animate);
+    
+    // Update logic here
+    if (song && song.buffer) {
+        let x = THREE.MathUtils.mapLinear(song.context.currentTime, 0, song.buffer.duration, 0, screenSize);
 
-  ySteps = x / (window.innerWidth - 2 * border);
-  x -= (window.innerWidth - 2 * border) * ySteps;
+        ySteps = x / (window.innerWidth - 2 * border);
+        x -= (window.innerWidth - 2 * border) * ySteps;
 
-  let frequency = song.getLevel() * spacing * amplification * 4; // remove *4 for noisy pieces
-  sphere.position.set(x + border, y * ySteps + border, 0);
-  sphere.scale.set(frequency, frequency, frequency);
+        let frequency = song.getLevel() * spacing * amplification * 4; // remove *4 for noisy pieces
+        sphere.position.set(x + border, y * ySteps + border, 0);
+        sphere.scale.set(frequency, frequency, frequency);
 
-  // Render the scene
-  renderer.render(scene, camera);
+        // Render the scene
+        renderer.render(scene, camera);
+    }
 }
