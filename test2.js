@@ -110,7 +110,3 @@ function animate() {
   // Render the scene
   renderer.render(scene, camera);
 }
-
-
-// Run the setup functions
-init();
