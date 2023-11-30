@@ -33,7 +33,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     // Create geometry and material
-    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const geometry = new THREE.BoxGeometry(1, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
 
     // Create mesh
