@@ -369,12 +369,13 @@ function onSelect() {
 	if (isplaying[index]) {
 	  audio.pause();
 	  isplaying[index] = false;
+	  setDefaultMaterial(index);
 	} else {
 	  audio.play();
 	  isplaying[index] = true;
 	}
   }
-  
+
   function getIntersections(controller) {
 	const tempMatrix = new THREE.Matrix4();
 	const raycaster = new THREE.Raycaster();
@@ -421,11 +422,7 @@ function render() {
 		planeMaterials[index].color = color;
 
 		const volume = analyzer.getAverageFrequency() / 255;
-    	const maxRotationAngle = Math.PI / 2; // Adjust the maximum rotation angle as needed
-    	const rotationAngle = maxRotationAngle * volume;
-
-    	// Update plane rotation based on volume
-    	planes[index].rotation.set(0, rotationAngle, 0);
+    	
 	
 	});
 
