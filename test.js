@@ -369,7 +369,6 @@ function onSelect() {
 	if (isplaying[index]) {
 	  audio.pause();
 	  isplaying[index] = false;
-	  setDefaultMaterial(index);
 	} else {
 	  audio.play();
 	  isplaying[index] = true;
