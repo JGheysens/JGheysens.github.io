@@ -11,7 +11,8 @@ let ySteps;
 let screenSize;
 
 // Assuming you have loaded Three.js library
-
+const startButton = document.getElementById('startButton');
+startButton.addEventListener('click', init);
 
 // Set up the initial scene
 function init() {
@@ -84,7 +85,7 @@ if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
 
 };
 }
-
+d
 // Handle window resizing
 function onWindowResize() {
 /*   camera.aspect = window.innerWidth / window.innerHeight;
