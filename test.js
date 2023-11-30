@@ -216,6 +216,7 @@ let planeMaterials; // Array to store materials for both planes
 let listener;
 let audio1, audio2, audio3, audio4;
 let audioFile1, audioFile2, audioFile3, audioFile4;
+let analyzers;
 let isplaying = false;
 
 init();
@@ -329,7 +330,7 @@ function init() {
   controller.addEventListener('select', onSelect);
   scene.add(controller);
 
-  const analyzers = [createAnalyzer(audio1), createAnalyzer(audio2), createAnalyzer(audio3), createAnalyzer(audio4)];
+  analyzers = [createAnalyzer(audio1), createAnalyzer(audio2), createAnalyzer(audio3), createAnalyzer(audio4)];
 
 
   window.addEventListener('resize', onWindowResize);
@@ -425,6 +426,6 @@ function render() {
 		// Update plane scale based on volume
 		planes[index].scale.set(1, 1, 1).multiplyScalar(1 + averageVolume / 255);
 	  });
-	  
+
   renderer.render(scene, camera);
 }
