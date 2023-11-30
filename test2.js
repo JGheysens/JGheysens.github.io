@@ -98,7 +98,7 @@ function animate() {
   requestAnimationFrame(animate);
   
   // Update logic here
-  let x = THREE.map(song.currentTime(), 0, song.buffer.duration, 0, screenSize);
+  let x = THREE.map(song.context.currentTime, 0, song.buffer.duration, 0, screenSize);
 
   ySteps = x / (window.innerWidth - 2 * border);
   x -= (window.innerWidth - 2 * border) * ySteps;
