@@ -9,6 +9,7 @@ let y = spacing;
 let ySteps;
 
 let screenSize;
+let renderer;
 
 // Assuming you have loaded Three.js library
 const startButton = document.getElementById('startButton');
