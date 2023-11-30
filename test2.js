@@ -94,7 +94,7 @@ function onWindowResize() {
 function animate() {
   requestAnimationFrame(animate);
   
-  // Update logic here
+  /* // Update logic here
   let x = map(song.currentTime(), 0, song.buffer.duration, 0, screenSize);
 
   ySteps = x / (window.innerWidth - 2 * border);
@@ -103,7 +103,7 @@ function animate() {
   let frequency = song.getLevel() * spacing * amplification * 4; // remove *4 for noisy pieces
   sphere.position.set(x + border, y * ySteps + border, 0);
   sphere.scale.set(frequency, frequency, frequency);
-
+ */
   // Render the scene
   renderer.render(scene, camera);
 }
