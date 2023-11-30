@@ -46,7 +46,7 @@ function init() {
     song = new THREE.Audio(listener);
 
     const audioLoader = new THREE.AudioLoader();
-    audioLoader.load('./drums.mp3', function(buffer) {
+    audioLoader.load('./sounds/drums.mp3', function(buffer) {
         song.setBuffer(buffer);
         song.setLoop(true);
         song.setVolume(1);
