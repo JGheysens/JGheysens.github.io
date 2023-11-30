@@ -217,7 +217,7 @@ let listener;
 let audio1, audio2, audio3, audio4;
 let audioFile1, audioFile2, audioFile3, audioFile4;
 let analyzers;
-let isplaying = false;
+let isplaying = [false,false,false,false];
 
 init();
 animate();
@@ -351,28 +351,27 @@ function onSelect() {
 	  // Pause and play the audio to trigger a restart
 	  if (intersectedObject == plane1) {
 		//planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
-		toggleAudio(audio1);
+		toggleAudio(audio1, 0);
 	  } else if (intersectedObject == plane2) {
 		//planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
-		toggleAudio(audio2);
+		toggleAudio(audio2, 1);
 	  } else if (intersectedObject == plane3) {
 		//planeMaterials[2].color.setRGB(Math.random(), Math.random(), Math.random());
-		toggleAudio(audio3);
+		toggleAudio(audio3, 2);
 	  } else if (intersectedObject == plane4) {
 		//planeMaterials[3].color.setRGB(Math.random(), Math.random(), Math.random());
-		toggleAudio(audio4);
+		toggleAudio(audio4, 3);
 	  }
 	}
   }
   
-  function toggleAudio(audio) {
-	audio_test = audio;
-	if (isplaying) {
+  function toggleAudio(audio, index) {
+	if (isplaying[index]) {
 	  audio.pause();
-	  isplaying = false;
+	  isplaying[index] = false;
 	} else {
 	  audio.play();
-	  isplaying = true;
+	  isplaying[index] = true;
 	}
   }
   
@@ -411,7 +410,7 @@ function animate() {
 
 function render() {
 	analyzers.forEach((analyzer, index) => {
-		if (!isplaying) return;
+		if (!isplaying[index]) return;
 		const dataArray = analyzer.getFrequencyData();
 	
 		// Calculate the average frequency to determine color
