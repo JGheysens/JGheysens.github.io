@@ -103,7 +103,7 @@ function animate() {
     
     // Update logic here
     if (song && song.buffer) {
-        let x = THREE.MathUtils.mapLinear(song.context.currentTime, 0, song.buffer.duration, 0, screenSize);
+        let x = THREE.MathUtils.mapLinear(song.context.currentTime, 0, audio.buffer.duration, 0, screenSize);
 
         ySteps = x / (window.innerWidth - 2 * border);
         x -= (window.innerWidth - 2 * border) * ySteps;
