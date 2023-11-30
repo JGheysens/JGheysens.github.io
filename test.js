@@ -422,7 +422,7 @@ function render() {
 		planeMaterials[index].color = color;
 
 		const volume = analyzer.getAverageFrequency() / 255;
-    	
+    	planes[index].scale.y = volume;
 	
 	});
 
