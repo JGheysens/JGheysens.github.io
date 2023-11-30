@@ -39,6 +39,7 @@ function init() {
 
     // Create mesh
     const sphere = new THREE.Mesh(geometry, material);
+    sphere.position.set(0, 0, 0);
     scene.add(sphere);
 
     // Load the audio
