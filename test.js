@@ -421,10 +421,11 @@ function render() {
 		planeMaterials[index].color = color;
 	
 		// Calculate the average volume to determine scale
-		const averageVolume = dataArray.reduce((acc, value) => acc + value, 0) / dataArray.length;
+	/* 	const averageVolume = dataArray.reduce((acc, value) => acc + value, 0) / dataArray.length;
+		const siz
 	
 		// Update plane scale based on volume
-		planes[index].scale.set(1, 1, 1).multiplyScalar(1 + averageVolume / 255);
+		planes[index].scale.set(averageVolume, 1, 1); */
 	  });
 
   renderer.render(scene, camera);
