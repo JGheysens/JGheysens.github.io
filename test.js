@@ -208,33 +208,6 @@ class ARButton {
 
 }
 
-// Define the vertex shader code as a string
-const vertexShaderCode = `
-    varying vec2 vUv;
-
-    void main() {
-        vUv = uv;
-        gl_Position = vec4(position, 1.0);
-    }
-`;
-
-// Define the fragment shader code as a string
-const fragmentShaderCode = `
-    uniform sampler2D tAudioData;
-    varying vec2 vUv;
-
-    void main() {
-        vec3 backgroundColor = vec3(0.125, 0.125, 0.125);
-        vec3 color = vec3(1.0, 1.0, 0.0);
-
-        float f = texture2D(tAudioData, vec2(vUv.x, 0.0)).r;
-
-        float i = step(vUv.y, f) * step(f - 0.0125, vUv.y);
-
-        gl_FragColor = vec4(mix(backgroundColor, color, i), 1.0);
-    }
-`;
-
 let camera, scene, renderer;
 let controller;
 let plane1, plane2, plane3, plane4; // New variables for the planes
@@ -312,20 +285,8 @@ function init() {
   }
   );
 
-  audio1.play(); // Play the audio
-  
   // Attach the listener to the camera
   camera.add(listener);
-
-  // Create a new AudioAnalyser object
-  const analyser = new THREE.AudioAnalyser(audio1, fftSize);
-  fftMaterial = new THREE.ShaderMaterial({
-	uniforms: {
-		tAudioData: { value: new THREE.DataTexture(analyser.data, fftSize / 2, 1, THREE.LuminanceFormat) }
-	},
-	vertexShader: vertexShaderCode,
-	fragmentShader: fragmentShaderCode
-});
 
 
   // Create an array to store materials for both planes
@@ -337,8 +298,8 @@ function init() {
   ];
 
   // Create the first plane and position it
-  const geometry1 = new THREE.PlaneGeometry(1, 1);
-  plane1 = new THREE.Mesh(geometry1, fftMaterial);
+  const geometry1 = new THREE.PlaneGeometry(0.5, 0.5);
+  plane1 = new THREE.Mesh(geometry1, planeMaterials[0]);
   plane1.position.set(-1, 0, -1); // Move the first plane to the left
   plane1.rotateY(Math.PI / 4); // Rotate the plane 45 degrees
   scene.add(plane1);
@@ -368,8 +329,17 @@ function init() {
   controller.addEventListener('select', onSelect);
   scene.add(controller);
 
+  const analyzers = [createAnalyzer(audio1), createAnalyzer(audio2), createAnalyzer(audio3), createAnalyzer(audio4)];
+
+
   window.addEventListener('resize', onWindowResize);
 }
+
+function createAnalyzer(audio) {
+	const analyzer = new THREE.AudioAnalyser(audio, 32); // 32 frequency bands
+	return analyzer;
+  }
+  
 
 function onSelect() {
 	const intersections = getIntersections(controller);
@@ -379,6 +349,7 @@ function onSelect() {
   
 	  // Pause and play the audio to trigger a restart
 	  if (intersectedObject == plane1) {
+		planeMaterials[0].color.setRGB(Math.random(), Math.random(), Math.random());
 		toggleAudio(audio1);
 	  } else if (intersectedObject == plane2) {
 		planeMaterials[1].color.setRGB(Math.random(), Math.random(), Math.random());
@@ -394,6 +365,7 @@ function onSelect() {
   }
   
   function toggleAudio(audio) {
+	audio_test = audio;
 	if (isplaying) {
 	  audio.pause();
 	  isplaying = false;
@@ -437,8 +409,22 @@ function animate() {
 }
 
 function render() {
-	analyser.getFrequencyData();
-
-	fftMaterial.uniforms.tAudioData.value.needsUpdate = true;
+	analyzers.forEach((analyzer, index) => {
+		const dataArray = analyzer.getFrequencyData();
+	
+		// Calculate the average frequency to determine color
+		const averageFrequency = dataArray.reduce((acc, value) => acc + value, 0) / dataArray.length;
+		const color = new THREE.Color().setHSL(averageFrequency / 255, 1.0, 0.5);
+	
+		// Update plane color
+		planeMaterials[index].color = color;
+	
+		// Calculate the average volume to determine scale
+		const averageVolume = dataArray.reduce((acc, value) => acc + value, 0) / dataArray.length;
+	
+		// Update plane scale based on volume
+		planes[index].scale.set(1, 1, 1).multiplyScalar(1 + averageVolume / 255);
+	  });
+	  
   renderer.render(scene, camera);
 }
