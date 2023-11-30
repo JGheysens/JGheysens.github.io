@@ -45,19 +45,6 @@ function init() {
     camera.add(listener);
     song = new THREE.Audio(listener);
 
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load('./sounds/drums.mp3', function(buffer) {
-        song.setBuffer(buffer);
-        song.setLoop(true);
-        song.setVolume(1);
-        song.play();
-        // Set the buffer on the audio element as well
-        audio.setBuffer(buffer);
-        
-        // Update the screenSize after loading the audio
-        screenSize = window.innerWidth - 2 * border;
-    });
-
     camera.position.z = 5;
 
     window.addEventListener('resize', onWindowResize);
