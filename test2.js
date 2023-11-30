@@ -34,7 +34,7 @@ function init() {
 
     // Create geometry and material
     const geometry = new THREE.BoxGeometry(1, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff});
 
     // Create mesh
     const sphere = new THREE.Mesh(geometry, material);
