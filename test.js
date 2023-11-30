@@ -420,11 +420,6 @@ function render() {
 		// Update plane color
 		planeMaterials[index].color = color;
 	
-		// Calculate the average volume to determine scale
-		const averageVolume = dataArray.reduce((acc, value) => acc + value, 0) / dataArray.length;
-
-		// Update plane position based on volume
-		planes[index].position.z.multiplyScalar(1 + averageVolume / 255);
 	  });
 
   renderer.render(scene, camera);
