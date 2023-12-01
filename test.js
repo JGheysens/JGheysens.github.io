@@ -259,6 +259,7 @@ function init() {
 
   // Load audio using THREE.AudioLoader
   const loader1 = new THREE.AudioLoader();
+  
   loader1.load(audioFile1, function (buffer) {
     audio1.setBuffer(buffer);
     audio1.setLoop(true); // Set to true if you want the audio to loop
@@ -306,7 +307,7 @@ function init() {
   scene.add(plane1);
 
   // Create the second plane and position it
-  const geometry2 = new THREE.ConeGeometry( 0.5, 1, 32 );
+  const geometry2 = new THREE.ConeGeometry( 0.5, 1, 32 );;
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
   plane2.position.set(1, 0, -1); // Move the second plane to the right
   plane2.rotateY( - Math.PI / 4); // Rotate the plane -45 degrees
