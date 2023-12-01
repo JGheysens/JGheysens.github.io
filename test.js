@@ -306,7 +306,7 @@ function init() {
   scene.add(plane1);
 
   // Create the second plane and position it
-  const geometry2 = new THREE.TorusKnotGeometry( 0.5, 0.5, 20, 12 );
+  const geometry2 = new THREE.TorusKnotGeometry( 0.1, 0.1, 20, 12 );
   plane2 = new THREE.Mesh(geometry2, planeMaterials[1]);
   plane2.position.set(1, 0, -1); // Move the second plane to the right
   plane2.rotateY( - Math.PI / 4); // Rotate the plane -45 degrees
